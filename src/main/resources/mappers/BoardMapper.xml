@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.community.app.mapper.BoardMapper">
+
+
+    <!-- 게시판에 값 넣기 -->
+    <insert id="writePost">
+        INSERT INTO
+        <if test="category != null">
+            post VALUES(NULL,#{idx},#{title},#{writer},#{category},#{content},0,0,0,now())
+        </if>
+    </insert>
+
+    <!-- 각 카테고리별 게시판 -->
+    <select id="showCategoryPost" resultType="com.community.app.domain.Post">
+        SELECT * FROM post WHERE category=#{category} ORDER BY pidx DESC
+    </select>
+
+    <!-- 카테고리별 메인 띄우기(heart수대로)-->
+    <select id="showPostByHeart" resultType="com.community.app.domain.Post">
+        SELECT * from post where category=#{category} ORDER BY heartCount DESC LIMIT 5
+    </select>
+
+    <!-- 페이징 처리를 위한 카테고리별 게시물 수 세기 -->
+    <select id="showCategoryPostCount" resultType="Integer">
+        SELECT COUNT(*) FROM post WHERE category=#{category}
+    </select>
+
+    <!-- 페이징 -->
+    <select id="pagingBoard" resultType="com.community.app.domain.Post">
+        SELECT * FROM post WHERE category=#{category} ORDER BY pidx DESC limit #{start}, #{offset}
+    </select>
+
+    <!-- 조회수 증가 -->
+    <update id="updateHit" parameterType="com.community.app.domain.Post">
+        UPDATE post SET hit=hit+1 WHERE pidx=#{pidx}
+    </update>
+
+    <!-- 조회수 감소 -->
+    <update id="downHit" parameterType="com.community.app.domain.Post">
+        UPDATE post SET hit=hit-1 WHERE pidx=#{pidx}
+    </update>
+
+    <!-- 한 게시물의 총 추천 수 증가-->
+    <select id="updateHeartCountPlus" parameterType="com.community.app.domain.Post">
+        UPDATE post SET heartCount=heartCount+1 where pidx=#{pidx}
+    </select>
+
+    <!-- 한 게시물의 총 추천 수 감소-->
+    <select id="updateHeartCountMinus" parameterType="com.community.app.domain.Post">
+        UPDATE post SET heartCount=heartCount-1 where pidx=#{pidx}
+    </select>
+
+    <!-- 회원 한명이 추천을 눌렀는지 확인 -->
+    <select id="showHeart" resultType="Integer">
+        SELECT COUNT(*) from heart WHERE pidx=#{pidx} and idx=#{idx}
+    </select>
+
+    <!-- 추천 -->
+    <insert id="heartUp">
+        INSERT INTO heart VALUES((SELECT * FROM (SELECT MAX(hidx)+1 from heart) next), #{pidx}, #{idx})
+    </insert>
+
+    <!-- 추천 취소 -->
+    <delete id="heartDown">
+        DELETE FROM heart WHERE pidx=#{pidx} and idx=#{idx}
+    </delete>
+
+    <!-- 댓글 보여주기 -->
+    <select id="showReply" resultType="com.community.app.domain.Reply">
+        WITH RECURSIVE cte AS (
+        SELECT
+        ridx, pidx, idx, reRidxNum, ridxDepth, replyWriter, replyContent, regdate,
+        CAST(ridx AS CHAR(200)) AS path
+        FROM
+        reply
+        WHERE
+        reRidxNum IS NULL <!-- 원댓글 -->
+        UNION ALL
+        SELECT
+        r.ridx, r.pidx, r.idx, r.reRidxNum, r.ridxDepth, r.replyWriter, r.replyContent, r.regdate,
+        CONCAT(cte.path, ',', CAST(r.ridx AS CHAR(200))) AS path
+        FROM
+        reply r
+        INNER JOIN cte ON cte.ridx = r.reRidxNum
+        )
+        SELECT
+        ridx, pidx, idx, reRidxNum, ridxDepth, replyWriter, replyContent, regdate
+        FROM
+        cte
+        WHERE pidx=#{pidx}
+        ORDER BY
+        path;
+    </select>
+
+    <!-- 댓글 개수 증가! -->
+    <update id="updateReplyCountPlus" parameterType="com.community.app.domain.Post">
+        UPDATE post SET replyCount=replyCount+1 WHERE pidx=#{pidx}
+    </update>
+
+    <!-- 감소 -->
+    <update id="updateReplyCountMinus" parameterType="com.community.app.domain.Post">
+        UPDATE post SET replyCount=replyCount-1 WHERE pidx=#{pidx}
+    </update>
+
+    <!-- 게시글 눌렀을때 상세보기(카테고리별) -->
+    <select id="postDetail" resultType="com.community.app.domain.Post">
+        SELECT * FROM post WHERE pidx=#{pidx}
+    </select>
+
+    <!-- 게시글 수정 -->
+    <update id="updatePost" parameterType="com.community.app.domain.Post">
+        UPDATE post SET title=#{title},content=#{content} WHERE pidx=#{pidx}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="deletePost">
+        DELETE FROM post WHERE pidx=#{pidx}
+    </delete>
+
+    <!-- 페이징을 위한 검색된 포스트 수 세기(전체데이터 검색) -->
+    <select id="searchPostsCount" resultType="Integer">
+        SELECT COUNT(*) FROM post WHERE title LIKE CONCAT('%', #{keyword}, '%') OR
+        content LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <!-- 페이징을 위한 검색된 포스트 수 세기(카테고리별 검색) -->
+    <select id="searchPostsCategoryCount" resultType="Integer">
+        SELECT COUNT(*) FROM post WHERE category=#{category} AND
+        (title LIKE CONCAT('%', #{keyword}, '%') OR
+        content LIKE CONCAT('%', #{keyword}, '%'))
+    </select>
+
+    <!-- 특정 게시판 검색 -->
+    <select id="searchPostsByCategory" resultType="com.community.app.domain.Post">
+        SELECT * FROM post WHERE category=#{category} AND
+        (title LIKE CONCAT('%', #{keyword}, '%') OR content LIKE CONCAT('%', #{keyword}, '%'))
+        ORDER BY regdate DESC LIMIT #{start}, #{offset}
+    </select>
+
+    <!-- 전체 게시판 내 검색과 페이징 -->
+    <select id="searchPostsAll" resultType="com.community.app.domain.Post">
+        SELECT * FROM post WHERE
+        title LIKE CONCAT('%', #{keyword}, '%') OR content LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY regdate DESC limit #{start}, #{offset}
+    </select>
+
+    <!--<if test="category != ''">
+            <if test="category == 'daily'">
+                daily WHERE title LIKE CONCAT('%', #{keyword}, '%') ORDER BY bidx DESC
+            </if>
+            <if test="category == 'counseling'">
+                counseling WHERE title LIKE CONCAT('%', #{keyword}, '%') ORDER BY bidx DESC
+            </if>
+            <if test="category == 'hobby'">
+                hobby WHERE title LIKE CONCAT('%', #{keyword}, '%') ORDER BY bidx DESC
+            </if>
+            <if test="category == 'ent'">
+                ent WHERE title LIKE CONCAT('%', #{keyword}, '%') ORDER BY bidx DESC
+            </if>
+            <if test="category == 'freeBoard'">
+                freeBoard WHERE title LIKE CONCAT('%', #{keyword}, '%') ORDER BY bidx DESC
+            </if>
+        </if>-->
+
+</mapper>

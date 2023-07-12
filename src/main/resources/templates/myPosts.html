@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/myPageLayout}"
+      layout:fragment="Content"
+>
+<head>
+    <title>테스트 페이지 </title>
+    <link rel="stylesheet" th:href="@{/css/myPosts.css}">
+</head>
+<body>
+    <div class="change-page">
+        <div class="page-info">
+            <h3>작성 게시글 보기</h3>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <td style="width: 55%">제목</td>
+                <td style="width: 15%">조회수</td>
+                <td style="width: 15%">추천수</td>
+                <td style="width: 15%">등록일</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="data:${data}">
+                <td>
+                    <a th:href="@{/postDetail(pidx=${data.pidx})}">
+                        <span class="title" th:text="${data.title}"></span>
+                    </a>
+                </td>
+                <td th:text="${data.hit}"></td>
+                <td th:text="${data.heartCount}"></td>
+                <td th:text="${data.regdate}"></td>
+            </tr>
+            <tr th:if="${data.isEmpty()}">
+                <td colspan="4">작성한 게시물이 없습니다</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="pagination">
+            <ul>
+                <li>
+                    <a th:class="${paging.startPage == 1} ? 'disabled' : ''"
+                       th:href="@{/board/{category}(category=${category},
+                    nowPage=${paging.startPage-1},
+                    cntPerPage=${paging.cntPerPage})}">&laquo;</a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+                    <a th:href="@{/board/{category}(category=${category},nowPage=${i},cntPerPage=${paging.cntPerPage})}"
+                       th:class="${i} == ${paging.nowPage} ? 'active' : ''"
+                       th:text="${i}"></a>
+                </li>
+                <li>
+                    <a  th:class="${paging.endPage == paging.lastPage} ? 'disabled' : ''"
+                        th:href="@{/board/{category}(category=${category},
+                    nowPage=${paging.endPage+1},
+                    cntPerPage=${paging.cntPerPage})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

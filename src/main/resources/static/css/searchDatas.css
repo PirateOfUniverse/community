@@ -1,0 +1,32 @@
+.page-info {
+	width: 80%;
+	margin: 50px auto 20px auto;
+}
+
+table {
+        width: 80%;
+        margin: 50px auto;
+        text-align: center;
+        border-collapse: collapse;
+      }
+      table tr:nth-child(even) {
+        height: 30px;
+        border-bottom: 0.5px solid rgb(165, 165, 165);
+        background-color: rgb(241, 241, 241);
+        font-size: 14px;
+      }
+      table tr:nth-child(odd) {
+        height: 30px;
+        border-bottom: 0.5px solid rgb(165, 165, 165);
+        font-size: 14px;
+      }
+      table tr:first-child {
+        border-top: 1px solid black;
+        font-size: 14px;
+        height: 40px;
+      }
+      
+      tr td a {
+		  text-decoration: none;
+		  color: black;
+	  }

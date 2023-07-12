@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/mainLayout}"
+      layout:fragment="Content"
+>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>테스트 페이지 </title>
+    <link rel="stylesheet" th:href="@{/css/postDetail.css}">
+</head>
+<body>
+<div class="change-page">
+    <div class="board-detail" th:each="notice:${notice}">
+        <div class="title">
+            <p th:text="${notice.title}"></p>
+        </div>
+        <div class="extra">
+            <div class="extra-middle">
+                <span>작성자</span>
+                <span class="writer-name" th:text="${notice.writer}"></span>
+            </div>
+        </div>
+        <div class="notice-content">
+            <pre th:utext="${notice.content}"></pre>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/mainLayout}"
+      layout:fragment="Content"
+>
+<head>
+	<title>테스트 페이지 </title>
+	<link rel="stylesheet" th:href="@{/css/searchDatas.css}">
+</head>
+<body>
+    <div class="change-page">
+    	<div class="page-info">
+    		<h3>검색된 게시물</h3>
+    	</div>
+      <div class="search-wrap">
+        <div class="search-result">
+          <table>
+            <thead>
+              <tr>
+                <td style="width: 10%">번호</td>
+                <td style="width: 50%">제목</td>
+                <td style="width: 20%">글쓴이</td>
+                <td style="width: 10%">조회수</td>
+                <td style="width: 10%">등록일</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="dto:${data}">
+                <td th:text="${dto.bidx}"></td>
+                <td>
+                	<th:block th:if="${dto.selects == 'daily'}">
+                		<a th:href="@{dailyDetail(bidx=${dto.bidx})}">
+                			<p class="title" th:text="${dto.title}"></p>
+                		</a>
+                	</th:block>
+                	<th:block th:if="${dto.selects == 'counseling'}">
+                		<a th:href="@{counselingDetail(bidx=${dto.bidx})}">
+                			<p class="title" th:text="${dto.title}"></p>
+                		</a>
+                	</th:block>
+                	<th:block th:if="${dto.selects == 'hobby'}">
+                		<a th:href="@{hobbyDetail(bidx=${dto.bidx})}">
+                			<p class="title" th:text="${dto.title}"></p>
+                		</a>
+                	</th:block>
+                	<th:block th:if="${dto.selects == 'ent'}">
+                		<a th:href="@{entDetail(bidx=${dto.bidx})}">
+                			<p class="title" th:text="${dto.title}"></p>
+                		</a>
+                	</th:block>
+                	<th:block th:if="${dto.selects == 'freeBoard'}">
+                		<a th:href="@{freeBoardDetail(bidx=${dto.bidx})}">
+                			<p class="title" th:text="${dto.title}"></p>
+                		</a>
+                	</th:block>
+                  
+                </td>
+                <td th:text="${dto.writer}"></td>
+                <td th:text="${dto.hit}">
+                  <!--<input type="hidden" th:value="${dto.selects}" />-->
+                </td>
+                <td th:text="${dto.regdate}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

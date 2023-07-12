@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/adminLayout}"
+      layout:fragment="Content"
+>
+<head>
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/manage.css}">
+</head>
+<body>
+<div class="change-page">
+    <div class="page-info">
+        <h3>전체 게시글 관리</h3>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <td style="width: 50%">제목</td>
+            <td style="width: 10%">조회수</td>
+            <td style="width: 10%">추천수</td>
+            <td style="width: 10%">등록일</td>
+            <td style="width: 20%">관리</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="data:${data}">
+            <td>
+                <a th:href="@{/postDetail(pidx=${data.pidx})}">
+                    <span class="title" th:text="${data.title}"></span>
+                </a>
+            </td>
+            <td th:text="${data.hit}"></td>
+            <td th:text="${data.heartCount}"></td>
+            <td th:text="${data.regdate}"></td>
+            <td>
+                <button id="delete-or-not">
+                    <input type="hidden" th:value="${data.pidx}" id="pidx"/>
+                    <span>삭제</span>
+                </button>
+            </td>
+        </tr>
+        <tr th:if="${data.isEmpty()}">
+            <td colspan="5">게시물이 없습니다</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="pagination">
+        <ul>
+            <li>
+                <a th:class="${paging.startPage == 1} ? 'disabled' : ''"
+                   th:href="@{/admin/managePosts(
+                    nowPage=${paging.startPage-1},
+                    cntPerPage=${paging.cntPerPage})}">&laquo;</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+                <a th:href="@{/admin/managePosts(nowPage=${i},cntPerPage=${paging.cntPerPage})}"
+                   th:class="${i} == ${paging.nowPage} ? 'active' : ''"
+                   th:text="${i}"></a>
+            </li>
+            <li>
+                <a  th:class="${paging.endPage == paging.lastPage} ? 'disabled' : ''"
+                    th:href="@{/admin/managePosts(
+                    nowPage=${paging.endPage+1},
+                    cntPerPage=${paging.cntPerPage})}">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script>
+    //var pidx = parseInt($("#pidx").val());
+    var pidx = $("#pidx").val();
+
+    $("#delete-or-not").click(function(){
+         if(!confirm("삭제하시겠습니까?")) {
+            alert("취소하였습니다");
+        } else {
+            $.ajax({
+                url: 'managePosts/deletePost',
+                type: 'get',
+                contentType: 'application/json',
+                data: {pidx: pidx},
+                success: function(data) {
+                    alert("삭제되었습니다");
+                    window.location.reload();
+                }
+            })
+        }
+    })
+
+</script>
+</body>
+</html>

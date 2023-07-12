@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/mainLayout}"
+      layout:fragment="Content"
+>
+<head>
+  <title>테스트 페이지 </title>
+  <link rel="stylesheet" th:href="@{/css/board.css}">
+</head>
+<body>
+<div class="change-page">
+  <div class="page-info">
+    <h3 th:text="${category}">test</h3>
+  </div>
+  <div class="search-category">
+    <form method="get" id="search-form">
+      <input type="text" class="search-category-keyword" name="keyword"
+             placeholder="검색어를 입력하세요" />
+      <input type="submit" class="search-category-btn" value="게시판에서 검색" />
+    </form>
+  </div>
+  <div class="write">
+    <a href="/write"><input type="button" class="insert-button" value="글쓰기" /></a>
+  </div>
+  <table>
+    <thead>
+    <tr>
+      <td style="width: 10%">번호</td>
+      <td style="width: 40%">제목</td>
+      <td style="width: 20%">글쓴이</td>
+      <td style="width: 10%">조회수</td>
+      <td style="width: 10%">추천수</td>
+      <td style="width: 10%">등록일</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="data:${data}">
+      <td th:text="${data.pidx}"></td>
+      <td>
+        <a th:href="@{/postDetail(pidx=${data.pidx})}">
+          <span class="title" th:text="${data.title}"></span>
+          <span>(</span>
+          <span class="title" th:text="${data.replyCount}"></span>
+          <span>)</span>
+        </a>
+      </td>
+      <td th:text="${data.writer}"></td>
+      <td th:text="${data.hit}">
+        <input type="hidden" th:value="${data.category}" />
+      </td>
+      <td th:text="${data.heartCount}" />
+      <td th:text="${data.regdate}"></td>
+    </tr>
+    <tr th:if="${data.isEmpty()}">
+      <td colspan="6">게시물이 없습니다</td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="pagination">
+    <ul>
+      <li>
+        <a th:class="${paging.startPage == 1} ? 'disabled' : ''"
+           th:href="@{/board/{category}(category=${category},
+        nowPage=${paging.startPage-1},
+        cntPerPage=${paging.cntPerPage})}">&laquo;</a>
+      </li>
+      <li th:each="i : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+        <a th:href="@{/board/{category}(category=${category},nowPage=${i},cntPerPage=${paging.cntPerPage})}"
+           th:class="${i} == ${paging.nowPage} ? 'active' : ''"
+           th:text="${i}"></a>
+      </li>
+      <li>
+        <a  th:class="${paging.endPage == paging.lastPage} ? 'disabled' : ''"
+            th:href="@{/board/{category}(category=${category},
+        nowPage=${paging.endPage+1},
+        cntPerPage=${paging.cntPerPage})}">&raquo;</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  document.getElementById("search-form").addEventListener("submit", function(e) {
+    e.preventDefault(); // 폼 제출 동작을 막음
+
+    var location = window.location.href + "/searchCategory";
+    console.log(location);
+
+    var form = e.target;
+    form.action = location; // 동적으로 action 값을 설정
+    form.submit(); // 변경된 action 값으로 폼을 제출
+  });
+</script>
+</body>
+</html>

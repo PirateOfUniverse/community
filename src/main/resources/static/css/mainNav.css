@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Nanum+Pen+Script&display=swap');
+
+
+* {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Nanum Gothic", sans-serif;
+        /*width: 100%;*/
+      }
+      
+      .app {
+		  display: flex;
+		  flex-direction: row;
+	  }
+      
+      .main-nav {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 20px 0;
+        width: 100%;
+      }
+      .nav-left {
+        font-family: "Nanum Pen Script", cursive;
+        margin-left: 20px;
+      }
+      h1 a {
+		  text-decoration: none;
+		  color: black;
+		  font-size: 40px;
+	  }
+      .nav-right {
+        margin-top: 10px;
+        margin-right: 20px;
+      }
+      .nav-right li {
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+      }
+      .nav-right .login-class{
+        margin-right: 5px;
+      }
+      .nav-right .welcome {
+        font-size: 12px;
+        color: rgb(0, 128, 255);
+        margin-right: 20px;
+        margin-top: 1px
+      }
+      .nav-right a {
+        text-decoration: none;
+        color: gray;
+        font-size: 14px;
+      }
+      .nav-right .my-page {
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+      .menu-bar {
+        background-color: rgb(0, 128, 255);
+        height: 70px;
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+      }
+      .menu-bar ul {
+        display: flex;
+        list-style: none;
+        padding: 10px 0;
+      }
+      .menu-bar ul li {
+        margin-left: 30px;
+      }
+      .menu ul li a {
+		  text-decoration: none;
+		  color:white;
+		  
+		  font-size: 18px;
+	  }
+		
+      .menu-bar .search-menu {
+        margin-right: 15px;
+      }
+      
+      /*.search-menu .selects {
+		  width: 100px;
+		  height: 28px;
+		  border: none;
+		  border-bottom: 1px solid #ccc;
+		  margin: 15px 0;
+	  }*/
+      
+      .search-menu .search-all{
+		  width: 300px;
+		  height: 28px;
+		  border: none;
+		  border-bottom: 1px solid #ccc;
+		  border-radius: 3px;
+	  }
+	  
+	  .search-menu .search-btn {
+		  width: 50px;
+		  height: 30px;
+		  background-color: white;
+		  border: 1px solid #ccc;
+		  border-radius: 3px;
+	  }
+	  
+	  .menubar-left {
+			width: 250px;
+			height: 100vh;
+		}
+
+      
+      .change-page {
+        width: 1500px;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        white-space: nowrap;
+        border-left: 1px solid #ccc;
+      }

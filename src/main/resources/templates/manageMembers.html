@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/adminLayout}"
+      layout:fragment="Content"
+>
+<head>
+  <title>Title</title>
+  <link rel="stylesheet" th:href="@{/css/manage.css}">
+</head>
+<body>
+<div class="change-page">
+  <div class="page-info">
+    <h3>회원 관리</h3>
+  </div>
+  <table>
+    <thead>
+    <tr>
+      <td style="width: 10%">회원번호</td>
+      <td style="width: 20%">회원이메일</td>
+      <td style="width: 20%">닉네임</td>
+      <td style="width: 20%">로그인수단</td>
+      <td style="width: 20%">가입일</td>
+      <td style="width: 10%">관리</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="data:${data}">
+      <td th:text="${data.idx}"></td>
+      <td th:text="${data.email}"></td>
+      <td th:text="${data.nick}"></td>
+      <td th:text="${data.provider}"></td>
+      <td th:text="${data.regdate}"></td>
+      <td>
+        <a th:href="@{manageMembers/deleteMember(idx=${data.idx})}">
+          <input type="button" value="강제탈퇴">
+        </a>
+      </td>
+    </tr>
+    <tr th:if="${data.isEmpty()}">
+      <td colspan="6">회원이 없습니다</td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="pagination">
+    <ul>
+      <li>
+        <a th:class="${paging.startPage == 1} ? 'disabled' : ''"
+           th:href="@{/board/{category}(category=${category},
+                    nowPage=${paging.startPage-1},
+                    cntPerPage=${paging.cntPerPage})}">&laquo;</a>
+      </li>
+      <li th:each="i : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+        <a th:href="@{/board/{category}(category=${category},nowPage=${i},cntPerPage=${paging.cntPerPage})}"
+           th:class="${i} == ${paging.nowPage} ? 'active' : ''"
+           th:text="${i}"></a>
+      </li>
+      <li>
+        <a  th:class="${paging.endPage == paging.lastPage} ? 'disabled' : ''"
+            th:href="@{/board/{category}(category=${category},
+                    nowPage=${paging.endPage+1},
+                    cntPerPage=${paging.cntPerPage})}">&raquo;</a>
+      </li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

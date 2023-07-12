@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/mainLayout}"
+      layout:fragment="Content"
+>
+<head>
+	<title>테스트 페이지 </title>
+	<link rel="stylesheet" th:href="@{/css/writePost.css}">
+</head>
+<style>
+	.ck-editor__editable {
+		min-height: 300px;
+	}
+	.ck-editor__editable p {
+		margin: 0;
+	}
+</style>
+<body>
+	<div class="change-page">
+      <h3>게시글 등록</h3>
+      <div class="contents">
+        <form method="post" action="writePost">
+        	<div class="write">
+	        	<div class="select-board">
+	                <select class="category" id="category" name="category">
+	                  <option value="">게시판 선택</option>
+	                  <option value="daily">일상</option>
+	                  <option value="counseling">고민상담</option>
+	                  <option value="hobby">취미</option>
+	                  <option value="ent">연예</option>
+	                  <option value="freeBoard">자유게시판</option>
+	                </select>
+	        	</div>
+	        	<div class="title-area">
+					<input type="text" class="title" name="title" placeholder="제목을 입력하세요" />
+				</div>
+	        	<div>
+	                <textarea class="write-area" id="editor" name="content" placeholder="내용을 입력하세요"></textarea>
+	        	</div>
+	          <div class="bottom-btn">
+				  <input type="hidden" name="idx" th:value="${#authentication.principal.idx}"/>
+				  <input type="hidden" class="writer" name="writer"
+						th:value="${#authentication.name}" />
+				  <input type="submit" value="등록" class="insert-btn" />
+	          </div>
+        	</div>
+        </form>
+      </div>
+    </div>
+	<!--
+	 idx는 Authentication 객체의 메서드인 getPrincipal()을 가져온 인증값
+	 PrincipalDetails에서 idx변수를 추가하여, idx는 PrincipalDetails에 속한 객체
+	 그래서 authentication.principal.idx 로 접근해 값을 가져옴
+	 name은, Authentication객체의 getUsername으로 가져오는 값
+	 Authentication객체의 principal이므로 authentication.name으로 바로 가져오기 가능
+	 -->
+
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	<script src="/editor/ckeditor.js"></script>
+	<script type="text/javascript">
+		ClassicEditor
+			.create( document.querySelector( '#editor' ), {
+				ckfinder: {
+					uploadUrl: 'http://localhost:8080/image/upload'
+				},
+			 	language: 'ko'
+			 })
+			.catch( error => {
+				console.error( error );
+			} );
+	</script>
+</body>
+</html>

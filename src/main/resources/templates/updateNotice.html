@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/adminLayout}"
+      layout:fragment="Content"
+>
+<head>
+  <title>테스트 페이지 </title>
+  <link rel="stylesheet" th:href="@{/css/writePost.css}">
+</head>
+<style>
+	.ck-editor__editable {
+		min-height: 300px;
+	}
+	.ck-editor__editable p {
+		margin: 0;
+	}
+</style>
+<body>
+<div class="change-page">
+  <h3>공지사항 수정</h3>
+  <div class="contents">
+    <form method="post" action="updateNotice">
+      <div class="write" th:each="notice:${notice}">
+        <div><input type="text" class="title" name="title" th:value="${notice.title}" /></div>
+        <div>
+          <textarea class="write-area" id="editor" name="content" th:text="${notice.content}"></textarea>
+        </div>
+        <div class="bottom-btn">
+          <input type="hidden" name="nidx" th:value="${notice.nidx}" />
+          <input type="submit" value="수정" class="insert-btn" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="/editor/ckeditor.js"></script>
+<script type="text/javascript">
+		ClassicEditor
+			.create( document.querySelector( '#editor' ), {
+				ckfinder: {
+					uploadUrl: 'http://localhost:8080/image/upload'
+				},
+			 	language: 'ko'
+			 })
+			.catch( error => {
+				console.error( error );
+			} );
+	</script>
+</body>
+</html>

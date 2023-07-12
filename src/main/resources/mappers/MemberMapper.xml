@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.community.app.mapper.MemberMapper">
+
+    <insert id="insertMember">
+        INSERT INTO member VALUES(null,#{email},#{passwd},#{nick},"ROLE_MEMBER",#{provider},#{providerId},now())
+    </insert>
+
+    <select id="duplicateEmail" parameterType="com.community.app.domain.Member" resultType="int">
+        SELECT COUNT(email) FROM member WHERE email=#{email}
+    </select>
+
+    <select id="duplicateNick" parameterType="com.community.app.domain.Member" resultType="int">
+        SELECT COUNT(nick) FROM member WHERE nick=#{nick}
+    </select>
+
+    <select id="selectMemberOne" resultType="com.community.app.domain.Member">
+        SELECT * FROM member WHERE email=#{email}
+    </select>
+
+    <select id="selectNick" resultType="com.community.app.domain.Member">
+        SELECT nick FROM member WHERE email=#{email}
+    </select>
+
+    <select id="findProviderAndProviderId" resultType="com.community.app.domain.Member">
+        SELECT * FROM member WHERE provider=#{provider} and providerId=#{providerId}
+    </select>
+
+    <select id="selectMemberSession" resultType="com.community.app.domain.Member">
+        SELECT email, nick FROM member WHERE nick=#{nick}
+    </select>
+
+    <select id="compareEmailAndPasswd" resultType="String">
+        SELECT passwd FROM member WHERE email=#{email}
+    </select>
+
+    <!-- 마이페이지 - 내가 쓴 게시물 전체보기 -->
+    <select id="showMyPosts" resultType="com.community.app.domain.Post">
+        SELECT * FROM post WHERE idx=#{idx} ORDER BY regdate DESC LIMIT #{start}, #{offset}
+    </select>
+
+    <!-- 마이페이지 - 내가 쓴 게시물의 전체 수 -->
+    <select id="showMyPostsCount" resultType="Integer">
+        SELECT COUNT(*) FROM post WHERE idx=#{idx}
+    </select>
+
+    <!-- 마이페이지 - 내가 쓴 댓글 전체보기 -->
+    <select id="showMyReplies" resultType="com.community.app.domain.Reply">
+        SELECT * FROM reply WHERE idx=#{idx} ORDER BY regdate DESC LIMIT #{start}, #{offset}
+    </select>
+
+    <!-- 마이페이지 - 내가 쓴 댓글의 전체 수 -->
+    <select id="showMyRepliesCount" resultType="Integer">
+        SELECT COUNT(*) FROM reply WHERE idx=#{idx}
+    </select>
+
+    <!-- 마이페이지 - 회원정보수정 -->
+    <update id="updateMember" parameterType="com.community.app.dto.MemberUpdateDto">
+        UPDATE member
+        SET
+        <if test="passwd != null and passwd != ''">
+            passwd=#{passwd},
+        </if>
+        nick=#{nick}
+        WHERE idx=#{idx}
+    </update>
+
+    <!-- 마이페이지 - 회원탈퇴 -->
+    <delete id="deleteMember">
+        DELETE FROM member WHERE idx=#{idx}
+    </delete>
+
+<!--
+    <select id="randomKeywords" resultType="com.community.app.dto.KeywordDto">
+        SELECT keyword FROM keywords ORDER BY RAND() LIMIT 5
+    </select>
+
+    <select id="keywordsAll" resultType="com.community.app.dto.KeywordDto">
+        SELECT * FROM keywords ORDER BY kidx DESC
+    </select>
+-->
+
+</mapper>

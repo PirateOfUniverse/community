@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/mainLayout}"
+      layout:fragment="Content"
+>
+<head>
+	<title>테스트 페이지 </title>
+	<link rel="stylesheet" th:href="@{/css/writePost.css}">
+</head>
+<style>
+	.ck-editor__editable {
+		min-height: 300px;
+	}
+	.ck-editor__editable p {
+		margin: 0;
+	}
+</style>
+<body>
+	<div class="change-page">
+      <h3>게시글 수정</h3>
+      <div class="contents">
+        <form method="post" action="updatePost">
+        	<div class="write" th:each="post:${post}">
+				<div class="select-board">
+					<select class="category" id="category" name="category">
+						<option value="">게시판 선택</option>
+						<option value="daily">일상</option>
+						<option value="counseling">고민상담</option>
+						<option value="hobby">취미</option>
+						<option value="ent">연예</option>
+						<option value="freeBoard">자유게시판</option>
+					</select>
+				</div>
+	        	<div>
+	        		<input type="text" class="title" name="title" th:value="${post.title}" />
+	        	</div>
+	        	<div>
+	                <textarea class="write-area" id="editor" name="content" th:text="${post.content}"></textarea>
+	        	</div>
+				<div class="bottom-btn">
+		          <input type="hidden" name="pidx" th:value="${post.pidx}" />
+		          <input type="submit" value="수정" class="insert-btn" />
+		        </div>
+        	</div>
+        </form>
+      </div>
+    </div>
+
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	<script src="/editor/ckeditor.js"></script>
+	<script type="text/javascript">
+		ClassicEditor
+			.create( document.querySelector( '#editor' ), {
+				ckfinder: {
+					uploadUrl: 'http://localhost:8080/image/upload'
+				},
+			 	language: 'ko'
+			 })
+			.catch( error => {
+				console.error( error );
+			} );
+	</script>
+
+</body>
+</html>

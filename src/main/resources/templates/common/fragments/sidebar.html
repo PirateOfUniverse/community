@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- Thymeleaf 선언 / headerFragment 임을 선언-->
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="SidebarFragment">
+<link rel="stylesheet" th:href="@{/css/sidebar.css}">
+<div class="menubar-left">
+<!--    <div class="menubar-info">-->
+<!--        <h3 class="today-keyword">오늘의 키워드</h3>-->
+<!--    </div>-->
+<!--    <div class="menubar-list">-->
+<!--        <ul th:each="kDto:${kData}">-->
+<!--            <li th:text="${kDto.keyword}"></li>-->
+<!--        </ul>-->
+<!--    </div>-->
+    <div class="menubar-info">
+        <h3 class="today-keyword">To. 운영자</h3>
+    </div>
+    <div class="menubar-list">
+        <ul>
+<!--            <li>키워드 건의</li>-->
+            <li>공지사항 건의</li>
+        </ul>
+    </div>
+    <div class="menubar-info">
+        <h3 class="today-keyword">From. 운영자</h3>
+    </div>
+    <div class="menubar-list">
+        <ul>
+            <li><a href="#">What is Community?</a></li>
+            <li><a href="/notice">공지사항</a></li>
+        </ul>
+    </div>
+</div>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/myPageLayout}"
+      layout:fragment="Content"
+>
+<head>
+  <title>테스트 페이지 </title>
+  <link rel="stylesheet" th:href="@{/css/updateMember.css}">
+</head>
+<body>
+    <div class="update-wrap">
+      <div class="update-box">
+        <h2>회원정보 수정</h2>
+        <form method="post" id="update-form" onsubmit="return checkForm()" action="updateMember">
+          <div class="update-control">
+            <label>이메일</label>
+            <input type="text" id="email" name="email" th:value="${member.email}" readonly />
+          </div>
+          <div class="update-control">
+            <label>비밀번호변경</label>
+            <input type="button" id="get-code" value="인증코드 받기" />
+            <div class="hiding-div" id="hiding-div" style="display:none;">
+              <input type="text" class="email-auth-input" id="email-confirm" placeholder="인증번호를 입력해주세요" />
+              <p id="email-confirm-text">인증번호를 입력해주세요</p>
+            </div>
+            <div class="hiding-passwd-div" id="hiding-passwd-div" style="display:none;">
+              <input type="password" id="passwd" name="passwd" placeholder="비밀번호를 입력하세요"/>
+              <input type="password" id="re-passwd" name="re-passwd" placeholder="비밀번호를 한번 더 입력하세요"/>
+            </div>
+          </div>
+          <div class="update-control">
+            <label>닉네임</label>
+            <input type="hidden" id="recent-nick" th:value="${member.nick}" />
+            <input type="text" id="nick" name="nick" th:value="${member.nick}" />
+            <p id="duplicate-message-nick"></p>
+          </div>
+          <div>
+            <input type="hidden" id="idx" name="idx" th:value="${member.idx}" />
+            <input type="submit" class="update-btn" id="update-btn" value="회원정보 수정"/>
+          </div>
+        </form>
+<!--        <form method="post" action="deleteMember">-->
+<!--          &lt;!&ndash;          <a th:href="@{deleteMember(idx=${session.memberInfo.idx})}">&ndash;&gt;-->
+<!--          <input type="hidden" name="idx" th:value="${member.idx}" />-->
+<!--          <input type="submit" class="delete-btn" id="delete-btn" value="회원탈퇴" />-->
+<!--          &lt;!&ndash;          </a>&ndash;&gt;-->
+<!--        </form>-->
+        <button id="delete-or-not">
+          <span>회원탈퇴</span>
+        </button>
+      </div>
+    </div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+  <script>
+
+    // 비밀번호 변경시 이메일 인증
+    const emailConfirm = $("#email-confirm").val();
+	const emailConfirmText = $("#email-confirm-text").val();
+
+    $("#get-code").click(function() {
+      if($("#hiding-div").css("display") == "none") {
+				$("#hiding-div").show();
+	  }
+	  const email = $("#email").val();
+      $.ajax({
+        type: "post",
+        url: "http://localhost:8080/getPasswdCode",
+        data: {email: email},
+        success: function(data) {
+          alert("인증번호가 발송되었습니다");
+          console.log(data);
+          emailConfirmFunc(data, emailConfirm, emailConfirmText);
+        }
+      });
+    });
+
+    let showOrHide = "none";
+
+    // 이메일로 보낸 메일 인증번호 확인
+    function emailConfirmFunc(data, emailConfirm, emailConfirmText){
+		$("#email-confirm").keyup(function(){
+			if (data != $("#email-confirm").val()) {
+				emailConfirmCheck = false;
+				$("#email-confirm-text").html("<span id='email-confirmed'>인증번호가 잘못되었습니다</span>")
+				$("#email-confirmed").css({
+					"color" : "#FA3E3E",
+					"font-weight" : "bold",
+					"font-size" : "14px"
+				})
+				$("#hiding-passwd-div").hide();
+				showOrHide = "none";
+			} else {
+				emailConfirmCheck = true;
+				$("#email-confirm-text").html("<span id='email-confirmed'>인증번호 확인 완료</span>")
+				$("#email-confirmed").css({
+					"color" : "#0D6EFD",
+					"font-weight" : "bold",
+					"font-size" : "14px"
+				})
+				if($("#hiding-passwd-div").css("display") == "none") {
+                  $("#hiding-passwd-div").show();
+                  showOrHide = "show";
+                }
+			}
+		})
+	}
+
+<!--	$("#re-passwd).keyup(function() {-->
+<!--	  let passwd = $("#passwd").val();-->
+<!--	  let rePasswd = $("#re-passwd").val();-->
+<!--	  if(passwd == rePasswd) {-->
+<!--	    -->
+<!--	  }-->
+<!--	  -->
+<!--	})-->
+
+    let nickCanUse = "no";
+
+    // 닉네임 중복확인
+	$("#nick").keyup(function() {
+		let nick = $("#nick").val();
+		let recentNick = $("#recent-nick").val();
+        $.ajax({
+			type: "get",
+			url: "http://localhost:8080/nick-check",
+			data: {nick: nick},
+			dataType: "json",
+			success: function(data) {
+				if(data == 1) {
+				    if(nick != recentNick) {
+				      $("#duplicate-message-nick").text("이미 사용중인 닉네임입니다");
+					  nickCanUse = "no";
+				    } else if(nick == recentNick) {
+				      $("#duplicate-message-nick").text("현재 회원님이 사용중인 닉네임입니다");
+                      nickCanUse = "yes";
+				    }
+				} else if(nick == "" || nick == null) {
+				    $("#duplicate-message-nick").text("닉네임을 입력해주세요");
+				    nickCanUse = "no";
+				} else {
+					$("#duplicate-message-nick").text("사용 가능한 닉네임입니다");
+					nickCanUse = "yes";
+				}
+			},
+		})
+	});
+
+    // submit전 회원정보 수정 폼 체크
+	function checkForm() {
+	  let passwd = $("#passwd").val();
+	  let rePasswd = $("#re-passwd").val();
+	  let nick = $("#nick").val();
+
+      if(showOrHide == "show") {
+        if(passwd == "" || passwd == null) {
+          alert("비밀번호를 입력해주세요");
+          return false;
+        }
+
+        if(passwd != rePasswd) {
+          alert("비밀번호 일치여부를 확인해주세요");
+          return false;
+        }
+      }
+
+	  if(nick == "" || nick == null) {
+	    alert("닉네임을 입력해주세요");
+	    return false;
+	  } else if(nickCanUse == "no") {
+	    alert("닉네임을 확인해주세요");
+	    return false;
+	  }
+
+      alert("회원정보 수정이 완료되었습니다");
+	  return true;
+	}
+
+  </script>
+
+</body>
+</html>

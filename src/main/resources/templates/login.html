@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/loginLayout}"
+      layout:fragment="Content"
+>
+<head>
+	<title>테스트 페이지 </title>
+	<link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+	<div class="login-wrap">
+      <div class="login-box">
+        <h2>로그인</h2>
+        <form method="post" id="login-form" action="/login">
+          <div class="login-control">
+            <label>이메일</label>
+            <input
+              type="text"
+              id="email"
+              name="email"
+              required
+            />
+          </div>
+          <div class="login-control">
+            <label>비밀번호</label>
+            <input
+              type="password"
+              id="passwd"
+              name="passwd"
+              required
+            />
+          </div>
+          <div class="no-id">
+            <a href="/register">
+              <strong>계정이 없으신가요?</strong>
+            </a>
+          </div>
+          <div>
+            <input type="submit" id="login-btn" class="login-btn" value="로그인" />
+          </div>
+        </form>
+        <div class="social-login-btn-wrap">
+          <p>소셜 계정으로 로그인해보세요!</p>
+          <div class="google-login">
+            <a href="/oauth2/authorization/google">
+              <button class="google-btn">
+                <img src="/images/googleLogo.png" style="width: 25px">
+                <span>구글 계정으로 로그인</span>
+              </button>
+            </a>
+          </div>
+          <div class="naver-login">
+            <a href="/oauth2/authorization/naver">
+              <button class="naver-btn">
+                <img src="/images/naverLogo.svg" style="width: 25px">
+                <span>네이버 계정으로 로그인</span>
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+</body>
+</html>

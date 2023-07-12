@@ -1,0 +1,153 @@
+.page-info {
+	width: 1250px;
+	margin: 50px 0 20px 0;
+}
+
+.page-info h3 {
+	padding-left: 80px;
+}
+
+.search-category {
+    margin: 20px 0;
+    width: 1250px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.search-category .search-category-keyword {
+    width: 500px;
+    height: 30px;
+    border-radius: 3px;
+}
+
+.search-category .search-category-btn {
+    width: 150px;
+    height: 30px;
+    border-radius: 3px;
+}
+
+.write {
+	width: 1100px;
+	margin: 30px auto 20px auto;
+}
+	
+.write .insert-button {
+	padding: 5px;
+	background-color: white;
+	border: 1px solid rgb(165,165,165);
+	cursor: pointer;
+}
+	
+table {
+    width: 1100px;
+    /* content부분 크기조절하려면 여기 주목*/
+    margin: 20px auto;
+    text-align: center;
+    border-collapse: collapse;
+}
+table tr:nth-child(even) {
+   height: 40px;
+   border-bottom: 0.5px solid rgb(165, 165, 165);
+   background-color: rgb(251, 251, 251);
+   font-size: 14px;
+}
+table tr:nth-child(odd) {
+        height: 40px;
+        border-bottom: 0.5px solid rgb(165, 165, 165);
+        font-size: 14px;
+      }
+      table tr:first-child {
+        border-top: 1px solid black;
+        font-size: 14px;
+        height: 40px;
+      }
+      
+      tr td a {
+		  text-decoration: none;
+		  color: black;
+	  }
+
+	  .pagination {
+	  width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+        margin: 20px 0;
+      }
+
+      .pagination ul {
+        display: inline-block;
+        padding-left: 0;
+        margin: 0;
+      }
+
+      .pagination ul li {
+        list-style: none;
+        display: inline;
+      }
+
+      .pagination a {
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        padding: 8px 12px;
+        margin: 0 2px;
+        cursor: pointer;
+      }
+
+      .pagination li:first-child a,
+      .pagination li:last-child a {
+        border-radius: 4px;
+      }
+
+      .pagination li a {
+        color: rgb(0, 128, 255);
+        text-decoration: none;
+      }
+
+      .pagination li a.active {
+        background-color: #ccc;
+        border-color: rgb(0, 128, 255);
+        color: #fff;
+      }
+
+      .pagination li .disabled {
+        color: #ccc;
+        cursor: not-allowed;
+        background-color: #fff;
+        border-color: #ddd;
+      }
+	  
+	 /* .pagination {
+		  width: 100%;
+		  display: flex;
+		  flex-direction: row;
+		  justify-content: center;
+	  }
+
+	  .pagination li {
+        display: inline;
+        margin-right: 5px;
+        padding: 10px;
+        background-color: white;
+        color: rgb(0, 128, 255);
+        border: 1px solid #ccc;
+        border-radius: 2px;
+      }
+
+      .pagination a {
+        color: #333;
+        text-decoration: none;
+        padding-left: 2px;
+      }
+
+      .pagination .active a {
+        font-weight: bold;
+      }
+
+      .pagination .disabled a {
+        color: #ccc;
+        pointer-events: none;
+        cursor: default;
+      }
+*/

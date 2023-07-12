@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{common/layout/mainLayout}"
+	  layout:fragment="Content"
+>
+<head>
+	<title>테스트 페이지 </title>
+	<link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+	<div class="change-page">
+		<div class="ttl">
+			<p class="subTtl">💙금주의 인기글💙</p>
+			<a href="/write">
+				<input class="btn" type="button" value="글쓰기" />
+			</a>
+		</div>
+		<div class="topPost">
+			<div class="topTable">
+				<div class="category">💜자유게시판💜</div>
+				<table>
+					<thead>
+					<tr>
+						<th>제목</th>
+						<th>글쓴이</th>
+						<th>추천수</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr th:each="freeBoard:${freeBoard}">
+						<td>
+							<a th:href="@{/postDetail(pidx=${freeBoard.pidx})}"
+							   th:text="${freeBoard.title}">
+							</a>
+						</td>
+						<td th:text="${freeBoard.writer}"></td>
+						<td th:text="${freeBoard.heartCount}">
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="topTable">
+				<div class="category">💜연예게시판💜</div>
+				<table>
+					<thead>
+					<tr>
+						<th>제목</th>
+						<th>글쓴이</th>
+						<th>추천수</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr th:each="ent:${ent}">
+						<td>
+							<a th:href="@{/postDetail(pidx=${ent.pidx})}"
+							   th:text="${ent.title}">
+							</a>
+						</td>
+						<td th:text="${ent.writer}"></td>
+						<td th:text="${ent.heartCount}">
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="topTable">
+				<div class="category">💜취미게시판💜</div>
+				<table>
+					<thead>
+					<tr>
+						<th>제목</th>
+						<th>글쓴이</th>
+						<th>추천수</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr th:each="hobby:${hobby}">
+						<td>
+							<a th:href="@{/postDetail(pidx=${hobby.pidx})}"
+							   th:text="${hobby.title}">
+							</a>
+						</td>
+						<td th:text="${hobby.writer}"></td>
+						<td th:text="${hobby.heartCount}">
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="topTable">
+				<div class="category">💜일상게시판💜</div>
+				<table>
+					<thead>
+					<tr>
+						<th>제목</th>
+						<th>글쓴이</th>
+						<th>추천수</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr th:each="daily:${daily}">
+						<td>
+							<a th:href="@{/postDetail(pidx=${daily.pidx})}"
+							   th:text="${daily.title}">
+							</a>
+						</td>
+						<td th:text="${daily.writer}"></td>
+						<td th:text="${daily.heartCount}">
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

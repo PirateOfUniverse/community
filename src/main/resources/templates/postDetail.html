@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/mainLayout}"
+      layout:fragment="Content"
+>
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<title>테스트 페이지 </title>
+	<link rel="stylesheet" th:href="@{/css/postDetail.css}">
+</head>
+<body>
+	<div class="change-page">
+		<div class="board-detail" th:each="post:${post}">
+			<div class="title">
+				<p th:text="${post.title}"></p>
+			</div>
+			<div class="extra">
+				<div class="extra-middle">
+					<span>작성자</span>
+					<span class="writer-name" th:text="${post.writer}"></span>
+					<input type="hidden" name="category" id="category" th:value="${post.category}" />
+					<input type="hidden" name="pidx" id="pidx" th:value="${post.pidx}" />
+					<input type="hidden" name="idx" id="idx" th:value="${#authentication.principal.idx}" />
+				</div>
+			</div>
+			<div class="content">
+				<pre th:utext="${post.content}"></pre>
+			</div>
+			<div class="reply">
+				<div class="reply-p">
+					<p>댓글</p>
+				</div>
+				<div class="reply-wrap" th:each="reply:${reply}">
+					<div class="reply-con-wrap">
+						<div class="reply-con">
+							<span class="reply-writer" th:text="${reply.replyWriter}"></span>
+							<pre class="reply-content" th:text="${reply.replyContent}"></pre>
+							<input type="hidden" class="reply-pidx" th:value="${post.pidx}" />
+							<input type="hidden" name="idx" th:value="${#authentication.principal.idx}" />
+							<input type="hidden" class="ridxDepth" th:value="${reply.ridxDepth}" />
+							<input type="button" class="write-re-reply" value="댓글달기" />
+						</div>
+						<div class="update-delete-wrap" th:if="${#authentication.principal.idx == reply.idx}">
+							<input type="button" class="update-reply" value="수정" />
+							<a th:href="@{deleteReply(ridx=${reply.ridx})}">
+								<input type="hidden" name="ridx" th:value="${reply.ridx}" />
+								<input type="button" class="delete-reply" value="삭제" />
+							</a>
+						</div>
+					</div>
+					<div class="hiding-div" style="display: none;">
+						<form method="post" action="updateReply">
+							<input type="hidden" name="replyWriter" th:value="${#authentication.name}" />
+							<textarea name="replyContent" th:text="${reply.replyContent}"></textarea>
+							<input type="hidden" name="ridx" th:value="${reply.ridx}" />
+							<input type="submit" value="수정하기" />
+						</form>
+					</div>
+					<div class="hiding-reply-div" style="display:none;">
+						<form method="post" action="writeReReply">
+							<input type="hidden" name="replyWriter" th:value="${#authentication.name}" />
+							<input type="hidden" name="idx" th:value="${#authentication.principal.idx}" />
+							<textarea name="replyContent"></textarea>
+							<input type="hidden" name="pidx" th:value="${reply.pidx}"/>
+							<input type="hidden" name="reRidxNum" th:value="${reply.ridx}"/>
+							<input type="submit" value="등록하기" />
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="write-reply">
+				<form method="post" action="/writeReply">
+					<div>
+						<label>작성자</label>
+						<input type="text" class="reply-writer" id="reply-writer" name="replyWriter"
+							   th:value="${#authentication.name}" readonly/>
+					</div>
+					<div class="reply-content-wrap">
+						<textarea name="replyContent" id="reply-content"></textarea>
+					</div>
+					<div class="reply-button-wrap">
+						<input type="hidden" name="pidx" id="reply-pidx" th:value="${post.pidx}" />
+						<input type="hidden" name="idx" th:value="${#authentication.principal.idx}" />
+						<input type="submit" id="reply-button" class="reply-button" value="댓글 작성" />
+					</div>
+				</form>
+			</div>
+			<div class="heart-wrap">
+				<button class="heart" id="push-heart">
+					<input type="hidden" id="heart-check" th:value="${heart}" />
+					<i style="color: rgb(241, 241, 241);"
+					   class="fa-solid fa-heart" id="checked"></i>
+					heart
+				</button>
+			</div>
+		</div>
+		<div class="button-wrap" th:if="${#authentication.principal.idx == post.idx}">
+			<a th:href="@{updatePost(pidx=${post.pidx})}">
+				<button>수정</button>
+			</a>
+<!--			<a th:href="@{deletePost(pidx=${post.pidx}, category=${post.category})}">-->
+			<button id="delete-or-not">
+				삭제
+			</button>
+<!--			</a>-->
+		</div>
+    </div>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script>
+    	<!-- 추천 기능 관련 -->
+		const pidx = $("#pidx").val();
+		const idx = $("#idx").val();
+		let heartCheck = $("#heart-check").val();
+
+		if(heartCheck > 0) {
+			$("#checked").css("color", "pink");
+		} else {
+			$("#checked").css("color", "rgb(241, 241, 241)");
+		}
+
+		$("#push-heart").click(function() {
+			if(heartCheck > 0) {
+				$.ajax({
+					url: '/heartDown',
+					type: 'post',
+					contentType: 'application/json',
+					data: JSON.stringify({
+						pidx: pidx,
+						idx: idx,
+						heartCheck: heartCheck
+					}),
+					success: function(heart) {
+						$("#checked").css("color", "rgb(241, 241, 241)");
+						heartCheck = 0;
+						alert("추천이 취소되었습니다");
+					}
+				})
+			} else {
+				$.ajax({
+					url: '/heartUp',
+					type: 'post',
+					contentType: 'application/json',
+					data: JSON.stringify({
+						pidx: pidx,
+						idx: idx,
+						heartCheck: heartCheck
+					}),
+					success: function(heart) {
+						$("#checked").css("color", "pink");
+						heartCheck = 1;
+						alert("게시물을 추천하였습니다");
+					}
+				})
+			}
+		});
+
+		<!-- 대댓글일 경우 댓글을 왼쪽으로 밀기 -->
+		$(document).ready(function() {
+		  $(".reply-wrap").each(function() {
+			var ridxDepth = $(this).find(".ridxDepth").val();
+			if (ridxDepth == 2) {
+			  $(this).removeClass("reply-wrap").addClass("re-reply-wrap");
+			}
+		  });
+		});
+
+		$(document).ready(function() {
+			<!-- 댓글 수정 창 열기 -->
+			$(document).on('click', '.update-reply', function() {
+				var hidingDiv = $(this).parents(".reply-wrap").find(".hiding-div");
+				var hidingDivReply = $(this).parents(".re-reply-wrap").find(".hiding-div");
+				if (hidingDiv.css("display") == "none") {
+					hidingDiv.show();
+				} else if(hidingDivReply.css("display") == "none") {
+					hidingDivReply.show();
+				} else {
+					hidingDiv.hide();
+					hidingDivReply.hide();
+				}
+			});
+
+			<!-- 대댓글 작성 창 열기 -->
+			$(document).on('click', '.write-re-reply', function() {
+				var hidingDiv = $(this).closest(".reply-wrap").find(".hiding-reply-div");
+				if (hidingDiv.css("display") == "none") {
+					hidingDiv.show();
+				} else {
+					hidingDiv.hide();
+				}
+			});
+
+			$(document).on('click', '.write-re-reply', function() {
+				var hidingDiv = $(this).closest(".re-reply-wrap").find(".hiding-reply-div");
+				if (hidingDiv.css("display") == "none") {
+					hidingDiv.show();
+				} else {
+					hidingDiv.hide();
+				}
+			});
+
+
+		});
+
+	// pidx를 담는 변수는 위에 있음
+	var category = $("#category").val();
+
+	$("#delete-or-not").click(function(){
+		if(!confirm("삭제하시겠습니까?")) {
+			alert("취소하였습니다");
+		} else {
+			$.ajax({
+				url: 'deletePost',
+				type: 'get',
+				contentType: 'application/json',
+				data: {pidx: pidx, category: category},
+				success: function(data) {
+					alert("삭제되었습니다");
+					window.location.replace("http://localhost:8080/board/"+category);
+				}
+			})
+		}
+	})
+
+
+    </script>
+</body>
+</html>
+
+
+
+
+

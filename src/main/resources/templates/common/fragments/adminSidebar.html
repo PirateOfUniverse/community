@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!-- Thymeleaf 선언 / headerFragment 임을 선언-->
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="SidebarFragment">
+<link rel="stylesheet" th:href="@{/css/sidebar.css}">
+<div class="menubar-left">
+  <div class="menubar-info">
+    <h3 class="today-keyword">커뮤니티 관리</h3>
+  </div>
+  <div class="menubar-list">
+    <ul>
+      <a href="/admin/managePosts"><li>전체 게시글 관리</li></a>
+      <a href="/admin/manageReplies"><li>전체 댓글 관리</li></a>
+      <a href="/admin/manageMembers"><li>회원 관리</li></a>
+      <a href="/admin/manageNotices"><li>공지사항 관리</li></a>
+    </ul>
+  </div>
+</div>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/loginLayout}"
+      layout:fragment="Content"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .not-member-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+	  justify-content: center;
+	  align-items: center;
+    }
+    .not-member {
+      width: 500;
+      height: 500px;
+      text-align: center;
+    }
+    button {
+      width: 280px;
+      height: 50px;
+      margin-top: 10px;
+      background-color: rgb(0, 128, 255);
+      border: none;
+      border-radius: 3px;
+      color: white;
+      /* font-weight: bold; */
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+<body>
+    <div class="not-member-container">
+        <div class="not-member">
+            <h2>아직도 가입안하셨나요?</h2>
+            <br />
+            <p>
+                국내 최대 취미 커뮤니티 Community에 가입하시면 게시물을 볼 수 있습니다
+            </p>
+            <br />
+            <p>매일매일이 즐거운 Community 가입하기!</p>
+            <a href="/register"><button>가입하기</button></a>
+        </div>
+    </div>
+</body>
+</html>

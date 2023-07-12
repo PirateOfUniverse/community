@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- Thymeleaf 선언 / headerFragment 임을 선언-->
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="HeaderFragment">
+<link rel="stylesheet" th:href="@{/css/mainNav.css}">
+	<div class="main-nav">
+      <div class="nav-left">
+        <h1><a href="/">Community</a></h1>
+      </div>
+      <ul class="nav-right">
+          <li sec:authorize="isAnonymous()">
+                    <a href="/login" class="login-class">로그인</a>
+                    <a href="/register">회원가입</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <div class="welcome">
+                    <span sec:authentication="name"></span>
+                    <span>님 환영합니다!</span>
+                </div>
+                <a href="/logout">로그아웃</a>
+                <a href="/myPage/myPosts" class="my-page">마이페이지</a>
+                <a href="/admin/managePosts" sec:authorize="hasRole('ROLE_ADMIN')">관리자페이지</a>
+            </li>
+      </ul>
+    </div>
+    <div class="menu-bar">
+      <div class="menu">
+        <ul>
+          <li><a href="/board/daily">Daily</a></li>
+          <li><a href="/board/counseling">고민상담</a></li>
+          <li><a href="/board/hobby">취미</a></li>
+          <li><a href="/board/ent">연예</a></li>
+          <li><a href="/board/freeBoard">자유게시판</a></li>
+        </ul>
+      </div>
+      <div class="search-menu">
+      	<form method="get" action="/search">
+	        <input type="text" class="search-all" name="keyword" placeholder="검색어를 입력하세요" />
+	        <input type="submit" class="search-btn" value="검색" />
+      	</form>
+      </div>
+    </div>
+</html>

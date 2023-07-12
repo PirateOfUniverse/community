@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.community.app.mapper.AdminMapper">
+
+    <!-- 전체 게시글 보기 및 페이징 -->
+    <select id="adminShowPosts" resultType="com.community.app.domain.Post">
+        SELECT * FROM post ORDER BY pidx DESC limit #{start}, #{offset};
+    </select>
+
+    <!-- 전체 게시글 수 -->
+    <select id="adminShowPostsCount" resultType="Integer">
+        SELECT COUNT(*) FROM post;
+    </select>
+
+    <!-- 전체 댓글 보기 및 페이징 -->
+    <select id="adminShowReply" resultType="com.community.app.domain.Reply">
+        SELECT * FROM reply ORDER BY ridx DESC limit #{start}, #{offset};
+    </select>
+
+    <!-- 전체 댓글 수 -->
+    <select id="adminShowReplyCount" resultType="Integer">
+        SELECT COUNT(*) FROM reply;
+    </select>
+
+    <!-- 댓글 번호를 통해 게시물 번호 가져오기 -->
+    <!-- 댓글을 삭제한 후 게시물의 댓글 수를 -1만큼 빼기위해서 사용 -->
+    <select id="findPostFromRidx" resultType="int">
+        SELECT pidx FROM reply WHERE ridx=#{ridx}
+    </select>
+
+    <!-- 전체 회원 보기 및 페이징 -->
+    <select id="adminShowMember" resultType="com.community.app.domain.Member">
+        SELECT * FROM member ORDER BY idx DESC limit #{start}, #{offset};
+    </select>
+
+    <!-- 전체 회원 수 -->
+    <select id="adminShowMemberCount" resultType="Integer">
+        SELECT COUNT(*) FROM member;
+    </select>
+
+    <!-- 공지사항 작성 -->
+    <insert id="writeNotice">
+        INSERT INTO notice VALUES(NULL,#{title},'관리자',#{content},now())
+    </insert>
+
+    <!-- 공지 전체보기 및 페이징 -->
+    <select id="adminShowNotices" resultType="com.community.app.domain.Notice">
+        SELECT * FROM notice ORDER BY nidx DESC limit #{start}, #{offset}
+    </select>
+
+    <!-- 전체 공지 수 -->
+    <select id="adminShowNoticeCount" resultType="Integer">
+        SELECT COUNT(*) FROM notice
+    </select>
+
+    <!-- 공지 고유번호를 사용해서 공지글 컬럼 데이터 가져오기 -->
+    <select id="showNoticeOne" resultType="com.community.app.domain.Notice">
+        SELECT * FROM notice WHERE nidx=#{nidx}
+    </select>
+
+    <!-- 공지글 수정 -->
+    <update id="adminUpdateNotice" parameterType="com.community.app.domain.Notice">
+        UPDATE notice SET title=#{title},content=#{content} WHERE nidx=#{nidx}
+    </update>
+
+    <!-- 공지글 삭제 -->
+    <delete id="adminDeleteNotice">
+        DELETE FROM notice WHERE nidx=#{nidx}
+    </delete>
+
+</mapper>

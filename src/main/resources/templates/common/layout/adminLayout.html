@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!--라이브러리 참조 : Thymeleaf & Thymeleaf Layout -->
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="headers">
+    <header th:replace="/common/fragments/header :: HeaderFragment"></header>
+</div>
+
+<div class="app">
+    <sidebar th:replace="/common/fragments/adminSidebar :: SidebarFragment"></sidebar>
+
+    <th:block layout:fragment="Content"></th:block>
+</div>
+
+<footer th:replace="/common/fragments/footer :: FooterFragment"></footer>
+</body>
+</html>

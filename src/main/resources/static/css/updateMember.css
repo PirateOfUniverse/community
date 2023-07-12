@@ -1,0 +1,78 @@
+/* 회원 정보 수정 */
+
+.update-wrap {
+      width: 1500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-left: 1px solid #ccc;
+    }
+
+    .update-box {
+      background-color: white;
+      padding: 40px 50px;
+      border-radius: 5px;
+      width: 400px;
+    }
+
+    .update-box h2 {
+      margin-bottom: 20px;
+    }
+
+    .update-control {
+      margin-top: 15px;
+    }
+
+    .update-control #get-code {
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .update-box label {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .update-wrap .update-btn {
+      border: 0;
+      background-color: rgb(0, 128, 255);
+      color: white;
+      margin-top: 15px;
+      padding: 9px 8px;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .update-wrap input {
+      outline: 0;
+      border: 1px solid #c1c1c1;
+      margin-top: 7px;
+      border-radius: 4px;
+      width: 100%;
+      padding: 12px 8px;
+    }
+
+    ::placeholder {
+      color: grey;
+      font-size: 13px;
+    }
+
+    .ttl {
+      width: 100%;
+      height: 130px;
+      background-color: rgb(199, 245, 229);
+    }
+
+    .delete-btn {
+      border: 0;
+      background-color: rgb(0, 128, 255);
+      color: white;
+      margin-top: 15px;
+      padding: 9px 8px;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      cursor: pointer;
+    }

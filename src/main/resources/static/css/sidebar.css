@@ -1,0 +1,32 @@
+.menubar-left {
+	width: 250px;
+	height: 700px;
+}
+
+.menubar-left .menubar-info {
+	margin: 20px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid rgb(0, 128, 255);
+}
+
+.menubar-left .menubar-info h3 {
+	text-align: center;
+}
+
+.menubar-left ul {
+	list-style: none;
+}
+
+.menubar-left ul li {
+	margin-top: 15px;
+	margin-left: 25px;
+}
+
+.menubar-list {
+	margin-bottom: 80px;
+}
+
+.menubar-left a {
+	text-decoration: none;
+	color: black;
+}

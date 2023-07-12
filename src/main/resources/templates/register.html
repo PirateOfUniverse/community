@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/loginLayout}"
+      layout:fragment="Content"
+>
+<head>
+	<title>테스트 페이지 </title>
+	<link rel="stylesheet" th:href="@{/css/register.css}">
+</head>
+<body>
+	<div class="register-wrap">
+      <div class="register-box">
+        <h2>회원가입</h2>
+        <form method="post" id="register-form" onsubmit="return checkForm()" action="register">
+        	<div class="register-control">
+	          <label>이메일</label>
+	          <input
+	            type="text"
+	            id="email"
+	            name="email"
+	          />
+				<p id="duplicate-message"></p>
+				<input id="duplicate-email" type="button" value="중복확인"/>
+				<input id="email-authentication" type="button" value="본인인증"/>
+				<div class="hiding-div" id="hiding-div" style="display:none;">
+					<input type="text" class="email-auth-input" id="email-confirm" placeholder="인증번호를 입력해주세요" />
+					<p for="emailconfirm" id="email-confirm-text">인증번호를 입력해주세요</p>
+				</div>
+			</div>
+	        <span id="res"></span>
+        	<div class="register-control">
+	          <label>비밀번호</label>
+	          <input type="password" id="passwd" name="passwd"/>
+			  <p id="passwd-check"></p>
+        	</div>
+        	<div class="register-control">
+	          <label>비밀번호확인</label>
+	          <input
+	            type="password"
+				id="re-passwd"
+				name="re-passwd"
+	            placeholder="비밀번호를 한번 더 입력하세요"
+	          />
+	        </div>
+        	<div class="register-control">
+	          <label>닉네임</label>
+	          <input
+	            type="text"
+				id="nick"
+	            name="nick"
+	          />
+				<p id="duplicate-message-nick"></p>
+	        </div>
+        	<div class="no-register">
+	          <a href="/login">
+	            <strong>계정이 있으신가요?</strong>
+	          </a>
+        	</div>
+        	<div>
+	          <input type="submit" class="register-btn"
+					 id="register-btn" value="회원가입" />
+        	</div>
+        </form>
+      </div>
+    </div>
+
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script>
+    	let emailCheck = false; // 이메일 중복 검사값(디폴트는 false)
+    	let emailConfirmCheck = false; // 이메일 인증 검사값(디폴트는 false)
+    	let passwdCheck = false;
+
+    	function emailRegexCheck(email) {
+			let exp = /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9]+\.[a-zA-z]+$/;
+			return exp.test(email);
+		}
+
+    	$("#duplicate-email").click(function() {
+			$("#register-btn").attr("type", "button"); // 아이디 중복체크 통과 못하면 가입하기를 막기위함
+			const email = $("#email").val();
+			$.ajax({
+			type: "get",
+			async: false,
+			url: "http://localhost:8080/email-check",
+			data: {email: email},
+			success: function(data) {
+			if(data == 1) {
+					$("#duplicate-message").text("이미 사용중인 이메일입니다");
+					$("#duplicate-message").addClass("duplicateTrue");
+					$("#duplicate-message").removeClass("duplicateFalse");
+					return false;
+				} else {
+					if(!emailRegexCheck(email)) {
+						$("#duplicate-message").text("유효하지 않은 이메일주소입니다");
+					} else {
+						$("#duplicate-message").text("사용 가능한 이메일입니다");
+						$("#duplicate-message").addClass("duplicateFalse");
+						$("#duplicate-message").removeClass("duplicateTrue");
+						$("#register-btn").attr("type", "submit");
+						emailCheck = true;
+					}
+				}
+				},
+			});
+		});
+
+		// 이메일 인증번호 체크
+		const emailConfirm = $("#email-confirm").val();
+		const emailConfirmText = $("#email-confirm-text").val();
+
+		$("#email-authentication").click(function() {
+			if($("#hiding-div").css("display") == "none") {
+				$("#hiding-div").show();
+			}
+			const email = $("#email").val();
+			$.ajax({
+				type: "post",
+				url: "http://localhost:8080/mail-confirm",
+				data: {email: email},
+				success: function(data) {
+					alert("인증번호가 발송되었습니다");
+					console.log(data);
+					emailConfirmFunc(data, emailConfirm, emailConfirmText);
+				}
+			});
+		});
+
+		// 이메일 인증번호 체크 함수
+		function emailConfirmFunc(data, emailConfirm, emailConfirmText){
+			$("#email-confirm").keyup(function(){
+				if (data != $("#email-confirm").val()) {
+					emailConfirmCheck = false;
+					$("#email-confirm-text").html("<span id='email-confirmed'>인증번호가 잘못되었습니다</span>")
+					$("#email-confirmed").css({
+						"color" : "#FA3E3E",
+						"font-weight" : "bold",
+						"font-size" : "14px"
+
+					})
+				} else {
+					emailConfirmCheck = true;
+					$("#email-confirm-text").html("<span id='email-confirmed'>인증번호 확인 완료</span>")
+					$("#email-confirmed").css({
+						"color" : "#0D6EFD",
+						"font-weight" : "bold",
+						"font-size" : "14px"
+
+					})
+				}
+			})
+		}
+
+		$("#passwd").keyup(function(){
+			let passwd = $("#passwd").val();
+
+			let number = passwd.search(/[0-9]/g);
+			let english = passwd.search(/[a-z]/ig);
+			let specialChar = passwd.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+			let reg = /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
+			if(passwd.length < 8) {
+				$("#passwd-check").text("비밀번호는 8자 이상 입력해주세요");
+				passwdCheck = false;
+			} else if(passwd.search(/\s/) != -1) {
+				$("#passwd-check").text("공백없이 입력해주세요");
+				passwdCheck = false;
+			} else if(number < 0 || english < 0 || specialChar < 0) {
+				$("#passwd-check").text("영문, 숫자, 특수문자를 모두 사용해주세요");
+				passwdCheck = false;
+			} else {
+				$("#passwd-check").text("사용가능한 비밀번호입니다");
+				passwdCheck = true;
+			}
+
+		})
+
+		$("#nick").keyup(function() {
+			let nick = $("#nick").val();
+			$.ajax({
+				type: "get",
+				url: "http://localhost:8080/nick-check",
+				data: {nick: nick},
+				dataType: "json",
+				success: function(data) {
+					if(data == 1) {
+						$("#duplicate-message-nick").text("이미 사용중인 닉네임입니다");
+					} else {
+						$("#duplicate-message-nick").text("사용 가능한 닉네임입니다");
+					}
+				},
+			})
+		});
+
+		function checkForm() {
+			let email = $("#email").val();
+			let passwd = $("#passwd").val();
+			let rePasswd = $("#re-passwd").val();
+			let nick = $("#nick").val();
+
+			if(email == "" || email == null) {
+				alert("이메일을 입력해주세요");
+				return false;
+				// return값이 false가되면 아래 코드는 진행되지않음
+			} else if(emailCheck == false) {
+				alert("이메일 중복 검사를 진행해주세요");
+				return false;
+				// 이메일 검사 통과못하면 false 반환
+			} else if(emailConfirmCheck == false) {
+				alert("본인인증을 완료해주세요")
+				return false;
+			}
+
+			if(passwd == "" || passwd == null) {
+				alert("비밀번호를 입력해주세요");
+				return false;
+			} else if(passwdCheck == false) {
+				alert("비밀번호를 다시 설정해주세요");
+				return false;
+			}
+
+			if(passwd != rePasswd) {
+				alert("비밀번호 일치여부를 확인해주세요");
+				return false;
+			}
+
+			if(nick == "" || nick == null) {
+				alert("닉네임을 입력해주세요");
+				return false;
+			}
+
+			alert("회원가입이 완료되었습니다");
+			return true;
+			// registerForm.submit();
+			// 값이 모두 입력되었다면 submit되게 한다
+
+		}
+    </script>
+    
+</body>
+</html>

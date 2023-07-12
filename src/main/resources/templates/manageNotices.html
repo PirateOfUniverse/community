@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/adminLayout}"
+      layout:fragment="Content"
+>
+<head>
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/manage.css}">
+</head>
+<body>
+<div class="change-page">
+    <div class="page-info">
+        <h3>공지사항 관리</h3>
+    </div>
+    <div class="write-notice">
+        <a href="manageNotice/writeNotice">
+            <input type="button" class="write-notice-btn" value="공지 작성" />
+        </a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <td style="width: 10%">번호</td>
+            <td style="width: 60%">제목</td>
+            <td style="width: 10%">작성일</td>
+            <td style="width: 20%">관리</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="data:${data}">
+            <td th:text="${data.nidx}"></td>
+            <td>
+                <a th:href="@{/noticeDetail(nidx=${data.nidx})}">
+                    <span class="title" th:text="${data.title}"></span>
+                </a>
+            </td>
+            <td th:text="${data.regdate}"></td>
+            <td>
+                <a th:href="@{manageNotice/updateNotice(nidx=${data.nidx})}">
+                    <input type="button" value="수정" />
+                </a>
+                <a th:href="@{manageNotice/deleteNotice(nidx=${data.nidx})}">
+                    <input type="button" value="삭제" />
+                </a>
+            </td>
+        </tr>
+        <tr th:if="${data.isEmpty()}">
+            <td colspan="4">등록된 공지사항이 없습니다</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="pagination">
+        <ul>
+            <li>
+                <a th:class="${paging.startPage == 1} ? 'disabled' : ''"
+                   th:href="@{/board/{category}(category=${category},
+                    nowPage=${paging.startPage-1},
+                    cntPerPage=${paging.cntPerPage})}">&laquo;</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+                <a th:href="@{/board/{category}(category=${category},nowPage=${i},cntPerPage=${paging.cntPerPage})}"
+                   th:class="${i} == ${paging.nowPage} ? 'active' : ''"
+                   th:text="${i}"></a>
+            </li>
+            <li>
+                <a  th:class="${paging.endPage == paging.lastPage} ? 'disabled' : ''"
+                    th:href="@{/board/{category}(category=${category},
+                    nowPage=${paging.endPage+1},
+                    cntPerPage=${paging.cntPerPage})}">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

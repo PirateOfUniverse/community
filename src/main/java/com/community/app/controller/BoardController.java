@@ -162,7 +162,7 @@ public class BoardController {
     }
 
     // 게시물 삭제
-    @GetMapping("/deletePost")
+    @PostMapping("/deletePost")
     public String deletePost(@RequestParam(value="pidx", required = false) int pidx,
                              @RequestParam(value="category", required = false) String category) {
         boardService.deletePost(pidx);

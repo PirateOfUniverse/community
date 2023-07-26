@@ -238,15 +238,9 @@ public class MemberController {
     // 회원정보 수정 - 회원탈퇴
     @ResponseBody
     @PostMapping("/deleteMember")
-    public String deleteMember(int idx, HttpServletRequest request) {
-        String message = "";
+    public void deleteMember(@RequestParam(value="idx") int idx) {
         memberService.deleteMember(idx);
         // 회원탈퇴 시 db에서 회원정보가 idx기준으로 삭제됨
-
-        message = "<script>alert('회원탈퇴가 완료되었습니다');" +
-                "location.href='/';</script>";
-        
-        return message;
     }
 
 

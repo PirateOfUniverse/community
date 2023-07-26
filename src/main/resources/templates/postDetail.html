@@ -36,19 +36,31 @@
 				<div class="reply-wrap" th:each="reply:${reply}">
 					<div class="reply-con-wrap">
 						<div class="reply-con">
-							<span class="reply-writer" th:text="${reply.replyWriter}"></span>
-							<pre class="reply-content" th:text="${reply.replyContent}"></pre>
+							<div class="reply-writer-and-regdate">
+								<span class="reply-writer" th:text="${reply.replyWriter}"></span>
+								<span class="reply-regdate" th:text="${reply.regdate}"></span>
+							</div>
+							<div class="reply-content-wrap">
+								<div class="origin-reply-writer" th:if="${reply.originReplyWriter != null}">
+									<p>@
+										<span th:text="${reply.originReplyWriter}"></span>
+									</p>
+								</div>
+								<input type="hidden" th:value="${reply.originReplyWriter}" />
+								<pre class="reply-content" th:text="${reply.replyContent}"></pre>
+							</div>
 							<input type="hidden" class="reply-pidx" th:value="${post.pidx}" />
 							<input type="hidden" name="idx" th:value="${#authentication.principal.idx}" />
 							<input type="hidden" class="ridxDepth" th:value="${reply.ridxDepth}" />
-							<input type="button" class="write-re-reply" value="댓글달기" />
-						</div>
-						<div class="update-delete-wrap" th:if="${#authentication.principal.idx == reply.idx}">
-							<input type="button" class="update-reply" value="수정" />
-							<a th:href="@{deleteReply(ridx=${reply.ridx})}">
-								<input type="hidden" name="ridx" th:value="${reply.ridx}" />
-								<input type="button" class="delete-reply" value="삭제" />
-							</a>
+							<div class="function-wrap">
+								<p class="write-re-reply" style="cursor: pointer;">대댓글달기</p>
+								<div class="update-delete-wrap" th:if="${#authentication.principal.idx == reply.idx}">
+									<p class="update-reply" style="cursor: pointer;">수정</p>
+									<a th:href="@{deleteReply(ridx=${reply.ridx})}">
+										<p class="delete-reply">삭제</p>
+									</a>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="hiding-div" style="display: none;">
@@ -56,7 +68,7 @@
 							<input type="hidden" name="replyWriter" th:value="${#authentication.name}" />
 							<textarea name="replyContent" th:text="${reply.replyContent}"></textarea>
 							<input type="hidden" name="ridx" th:value="${reply.ridx}" />
-							<input type="submit" value="수정하기" />
+							<input type="submit" class="hiding-div-btn" value="수정하기" />
 						</form>
 					</div>
 					<div class="hiding-reply-div" style="display:none;">
@@ -66,7 +78,8 @@
 							<textarea name="replyContent"></textarea>
 							<input type="hidden" name="pidx" th:value="${reply.pidx}"/>
 							<input type="hidden" name="reRidxNum" th:value="${reply.ridx}"/>
-							<input type="submit" value="등록하기" />
+							<input type="hidden" name="originReplyWriter" th:value="${reply.replyWriter}" />
+							<input type="submit" class="hiding-div-btn" value="등록하기" />
 						</form>
 					</div>
 				</div>
@@ -74,8 +87,8 @@
 			<div class="write-reply">
 				<form method="post" action="/writeReply">
 					<div>
-						<label>작성자</label>
-						<input type="text" class="reply-writer" id="reply-writer" name="replyWriter"
+						<label>댓글 작성</label>
+						<input type="hidden" class="reply-writer" id="reply-writer" name="replyWriter"
 							   th:value="${#authentication.name}" readonly/>
 					</div>
 					<div class="reply-content-wrap">
@@ -84,7 +97,7 @@
 					<div class="reply-button-wrap">
 						<input type="hidden" name="pidx" id="reply-pidx" th:value="${post.pidx}" />
 						<input type="hidden" name="idx" th:value="${#authentication.principal.idx}" />
-						<input type="submit" id="reply-button" class="reply-button" value="댓글 작성" />
+						<input type="submit" id="reply-button" class="reply-button" value="작성" />
 					</div>
 				</form>
 			</div>
@@ -103,14 +116,14 @@
 			</a>
 <!--			<a th:href="@{deletePost(pidx=${post.pidx}, category=${post.category})}">-->
 			<button id="delete-or-not">
-				삭제
+				<span>삭제</span>
 			</button>
 <!--			</a>-->
 		</div>
     </div>
 	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script>
-    	<!-- 추천 기능 관련 -->
+    	// 추천 기능 관련
 		const pidx = $("#pidx").val();
 		const idx = $("#idx").val();
 		let heartCheck = $("#heart-check").val();
@@ -157,7 +170,7 @@
 			}
 		});
 
-		<!-- 대댓글일 경우 댓글을 왼쪽으로 밀기 -->
+		// 대댓글일 경우 댓글을 왼쪽으로 밀기
 		$(document).ready(function() {
 		  $(".reply-wrap").each(function() {
 			var ridxDepth = $(this).find(".ridxDepth").val();
@@ -168,7 +181,7 @@
 		});
 
 		$(document).ready(function() {
-			<!-- 댓글 수정 창 열기 -->
+			// 댓글 수정 창 열기
 			$(document).on('click', '.update-reply', function() {
 				var hidingDiv = $(this).parents(".reply-wrap").find(".hiding-div");
 				var hidingDivReply = $(this).parents(".re-reply-wrap").find(".hiding-div");
@@ -182,7 +195,7 @@
 				}
 			});
 
-			<!-- 대댓글 작성 창 열기 -->
+			// 대댓글 작성 창 열기
 			$(document).on('click', '.write-re-reply', function() {
 				var hidingDiv = $(this).closest(".reply-wrap").find(".hiding-reply-div");
 				if (hidingDiv.css("display") == "none") {
@@ -200,12 +213,10 @@
 					hidingDiv.hide();
 				}
 			});
-
-
 		});
 
 	// pidx를 담는 변수는 위에 있음
-	var category = $("#category").val();
+	let category = $("#category").val();
 
 	$("#delete-or-not").click(function(){
 		if(!confirm("삭제하시겠습니까?")) {

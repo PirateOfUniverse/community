@@ -13,12 +13,14 @@ public class Reply {
     private int ridxDepth;
     private String replyWriter;
     private String replyContent;
+    private String originReplyWriter;
     private String regdate;
 
     public Reply() {}
 
     public Reply(int ridx, int pidx, int idx, int reRidxNum, int ridxDepth,
-                 String replyWriter, String replyContent, String regdate) {
+                 String replyWriter, String replyContent,
+                 String originReplyWriter, String regdate) {
         this.ridx = ridx;
         this.pidx = pidx;
         this.idx = idx;
@@ -26,6 +28,7 @@ public class Reply {
         this.ridxDepth = ridxDepth;
         this.replyWriter = replyWriter;
         this.replyContent = replyContent;
+        this.originReplyWriter = originReplyWriter;
         this.regdate = regdate;
     }
 }

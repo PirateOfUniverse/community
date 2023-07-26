@@ -27,6 +27,7 @@
             </div>
             <div class="hiding-passwd-div" id="hiding-passwd-div" style="display:none;">
               <input type="password" id="passwd" name="passwd" placeholder="비밀번호를 입력하세요"/>
+              <p id="passwd-check"></p>
               <input type="password" id="re-passwd" name="re-passwd" placeholder="비밀번호를 한번 더 입력하세요"/>
             </div>
           </div>
@@ -37,7 +38,6 @@
             <p id="duplicate-message-nick"></p>
           </div>
           <div>
-            <input type="hidden" id="idx" name="idx" th:value="${member.idx}" />
             <input type="submit" class="update-btn" id="update-btn" value="회원정보 수정"/>
           </div>
         </form>
@@ -47,6 +47,7 @@
 <!--          <input type="submit" class="delete-btn" id="delete-btn" value="회원탈퇴" />-->
 <!--          &lt;!&ndash;          </a>&ndash;&gt;-->
 <!--        </form>-->
+        <input type="hidden" id="delete-member-idx" name="idx" th:value="${member.idx}" />
         <button id="delete-or-not">
           <span>회원탈퇴</span>
         </button>
@@ -56,7 +57,7 @@
   <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
   <script>
 
-    // 비밀번호 변경시 이메일 인증
+    // 비밀번호 변경시 이메일 인증 보내기(비밀번호 div 열기)
     const emailConfirm = $("#email-confirm").val();
 	const emailConfirmText = $("#email-confirm-text").val();
 
@@ -79,7 +80,7 @@
 
     let showOrHide = "none";
 
-    // 이메일로 보낸 메일 인증번호 확인
+    // 이메일로 보낸 메일 인증번호 확인 함수
     function emailConfirmFunc(data, emailConfirm, emailConfirmText){
 		$("#email-confirm").keyup(function(){
 			if (data != $("#email-confirm").val()) {
@@ -108,15 +109,33 @@
 		})
 	}
 
-<!--	$("#re-passwd).keyup(function() {-->
-<!--	  let passwd = $("#passwd").val();-->
-<!--	  let rePasswd = $("#re-passwd").val();-->
-<!--	  if(passwd == rePasswd) {-->
-<!--	    -->
-<!--	  }-->
-<!--	  -->
-<!--	})-->
+    // 비밀번호 실시간 유효성검사
+    let passwdCheck = false; // 비밀번호 사용가능여부 확인용 변수
+    $("#passwd").keyup(function(){
+		let passwd = $("#passwd").val();
 
+		let number = passwd.search(/[0-9]/g);
+		let english = passwd.search(/[a-z]/ig);
+		let specialChar = passwd.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
+		let reg = /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+
+		if(passwd.length < 8) {
+			$("#passwd-check").text("비밀번호는 8자 이상 입력해주세요");
+			passwdCheck = false;
+		} else if(passwd.search(/\s/) != -1) {
+			$("#passwd-check").text("공백없이 입력해주세요");
+			passwdCheck = false;
+		} else if(number < 0 || english < 0 || specialChar < 0) {
+			$("#passwd-check").text("영문, 숫자, 특수문자를 모두 사용해주세요");
+			passwdCheck = false;
+		} else {
+			$("#passwd-check").text("사용가능한 비밀번호입니다");
+			passwdCheck = true;
+		}
+
+	})
+
+    // 닉네임 사용가능 확인용 변수
     let nickCanUse = "no";
 
     // 닉네임 중복확인
@@ -158,6 +177,9 @@
         if(passwd == "" || passwd == null) {
           alert("비밀번호를 입력해주세요");
           return false;
+        } else if(passwdCheck == false) {
+          alert("비밀번호를 다시 설정해주세요");
+          return false;
         }
 
         if(passwd != rePasswd) {
@@ -177,6 +199,26 @@
       alert("회원정보 수정이 완료되었습니다");
 	  return true;
 	}
+
+	const idx = $("#delete-member-idx").val();
+
+    $("#delete-or-not").click(function(){
+         if(!confirm("탈퇴하시겠습니까?")) {
+            alert("취소하였습니다");
+        } else {
+            console.log(idx);
+            $.ajax({
+                url: '/deleteMember',
+                type: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                data: {idx: idx},
+                success: function(data) {
+                    alert("탈퇴가 완료되었습니다");
+                    window.location.replace("http://localhost:8080/logout");
+				}
+            })
+        }
+    })
 
   </script>
 

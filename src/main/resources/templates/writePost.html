@@ -22,7 +22,7 @@
 	<div class="change-page">
       <h3>게시글 등록</h3>
       <div class="contents">
-        <form method="post" action="writePost">
+        <form method="post" onsubmit="return checkForm()" action="writePost">
         	<div class="write">
 	        	<div class="select-board">
 	                <select class="category" id="category" name="category">
@@ -35,7 +35,7 @@
 	                </select>
 	        	</div>
 	        	<div class="title-area">
-					<input type="text" class="title" name="title" placeholder="제목을 입력하세요" />
+					<input type="text" class="title" id="title" name="title" placeholder="제목을 입력하세요" />
 				</div>
 	        	<div>
 	                <textarea class="write-area" id="editor" name="content" placeholder="내용을 입력하세요"></textarea>
@@ -61,16 +61,43 @@
 	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 	<script src="/editor/ckeditor.js"></script>
 	<script type="text/javascript">
+
+		let editor;
+
 		ClassicEditor
 			.create( document.querySelector( '#editor' ), {
-				ckfinder: {
-					uploadUrl: 'http://localhost:8080/image/upload'
-				},
 			 	language: 'ko'
-			 })
+			} )
+			.then( newEditor => {
+       			editor = newEditor;
+    		} )
 			.catch( error => {
 				console.error( error );
 			} );
+
+		function checkForm() {
+			let category = $("#category").val();
+			let title = $("#title").val();
+			let content = editor.getData();
+
+			if(category == "" || category == null) {
+				alert("카테고리를 선택해주세요");
+				return false;
+			}
+
+			if(title == "" || title == null) {
+				alert("제목을 입력해주세요");
+				return false;
+			}
+
+			if(content == "" || content == null) {
+				alert("내용을 입력해주세요");
+				return false;
+			}
+
+			alert("게시글이 작성되었습니다");
+			return true;
+		}
 	</script>
 </body>
 </html>

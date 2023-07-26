@@ -8,8 +8,8 @@
     </insert>
 
     <insert id="writeReReply">
-        INSERT INTO reply(ridx,pidx,idx,reRidxNum,ridxDepth,replyWriter,replyContent,regdate)
-        VALUES(null,#{pidx},#{idx},#{reRidxNum},2,#{replyWriter},#{replyContent},now())
+        INSERT INTO reply(ridx,pidx,idx,reRidxNum,ridxDepth,replyWriter,replyContent,originReplyWriter,regdate)
+        VALUES(null,#{pidx},#{idx},#{reRidxNum},2,#{replyWriter},#{replyContent},#{originReplyWriter},now())
     </insert>
 
     <update id="updateReply" parameterType="com.community.app.domain.Reply">

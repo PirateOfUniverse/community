@@ -70,7 +70,7 @@
     <select id="showReply" resultType="com.community.app.domain.Reply">
         WITH RECURSIVE cte AS (
         SELECT
-        ridx, pidx, idx, reRidxNum, ridxDepth, replyWriter, replyContent, regdate,
+        ridx, pidx, idx, reRidxNum, ridxDepth, replyWriter, replyContent, originReplyWriter, regdate,
         CAST(ridx AS CHAR(200)) AS path
         FROM
         reply
@@ -78,14 +78,14 @@
         reRidxNum IS NULL <!-- 원댓글 -->
         UNION ALL
         SELECT
-        r.ridx, r.pidx, r.idx, r.reRidxNum, r.ridxDepth, r.replyWriter, r.replyContent, r.regdate,
+        r.ridx, r.pidx, r.idx, r.reRidxNum, r.ridxDepth, r.replyWriter, r.replyContent, r.originReplyWriter, r.regdate,
         CONCAT(cte.path, ',', CAST(r.ridx AS CHAR(200))) AS path
         FROM
         reply r
         INNER JOIN cte ON cte.ridx = r.reRidxNum
         )
         SELECT
-        ridx, pidx, idx, reRidxNum, ridxDepth, replyWriter, replyContent, regdate
+        ridx, pidx, idx, reRidxNum, ridxDepth, replyWriter, replyContent, originReplyWriter, regdate
         FROM
         cte
         WHERE pidx=#{pidx}

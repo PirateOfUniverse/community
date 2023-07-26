@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&family=Nanum+Pen+Script&display=swap');
+
+
 .board-detail {
-	width: 80%;
+	width: 900px;
 	margin: 50px auto;
 	border: 1.5px solid rgb(200,200,200);
 	padding: 50px 10px 30px 10px;
@@ -27,6 +30,10 @@
 	margin-left: 15px;
 }
 
+pre {
+    font-family: "Nanum Gothic", sans-serif;
+}
+
 .content pre {
 	margin: 50px 20px 0 20px;
 	font-size: 14px;
@@ -47,61 +54,113 @@
 	margin-left: 4px;
 }
 
-.reply-wrap {
-    padding: 15px;
+.reply-wrap, .re-reply-wrap {
+    padding: 10px;
 }
 
-.reply-wrap .reply-con-wrap,
+/*.reply-wrap .reply-con-wrap,
 .re-reply-wrap .reply-con-wrap {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+}*/
+
+.reply-writer-and-regdate {
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    align-items: baseline;
+}
+
+.reply-writer-and-regdate .reply-writer {
+    margin-right: 10px;
+}
+
+.reply-content-wrap {
+    /*margin-top: 3px;*/
+    margin-left: 5px;
+    display: flex;
+    flex-direction: row;
+    font-size: 14px;
+}
+
+.origin-reply-writer {
+    margin-right: 5px;
+    color: blue;
+}
+
+.function-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
 }
 
 .update-delete-wrap {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 .reply-wrap .update-reply, .reply-wrap .delete-reply,
-.re-reply-wrap .update-reply, .re-reply-wrap .delete-reply {
-    width: 40px;
+.re-reply-wrap .update-reply, .re-reply-wrap .delete-reply{
+    /*width: 40px;
     height: 20px;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 3px;
-    cursor: pointer;
+    cursor: pointer;*/
+    margin-top: 8px;
+    margin-left: 8px;
+    font-size: 12px;
 }
 
 .reply-wrap .write-re-reply,
 .re-reply-wrap .write-re-reply {
-    width: 80px;
+    /*width: 80px;
     height: 30px;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 3px;
-    cursor: pointer;
+    cursor: pointer;*/
+    margin-top: 8px;
+    margin-left: 8px;
+    font-size: 12px;
 }
 
-.reply-wrap .reply-writer {
+.reply-writer {
 	margin-bottom: 10px;
-	font-weight: bold;
 	font-size: 14px;
 }
 
+.hiding-div form, .hiding-reply-div form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .hiding-div textarea,
- .hiding-reply-div textarea{
+.hiding-reply-div textarea{
     width: 100%;
     height: 60px;
     margin-top: 15px;
     resize: none;
 }
 
+.hiding-div .hiding-div-btn,
+.hiding-reply-div .hiding-div-btn {
+    width: 80px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    background-color: rgb(0, 128, 255);
+    margin-top: 10px;
+    color: white;
+}
+
 .re-reply-wrap { /* 대댓글은 한칸 옆으로 밀기 */
     margin-left: 30px;
-	display: flex;
+	/*display: flex;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: space-between;*/
 }
 
 .write-reply {
@@ -134,6 +193,7 @@
 }
 
 .write-reply .reply-button {
+    margin-top: 5px;
 	padding: 5px 7px;
 	background-color: white;
 	border: 1px solid #ccc;

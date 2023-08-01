@@ -211,6 +211,9 @@
 			} else if(emailConfirmCheck == false) {
 				alert("본인인증을 완료해주세요")
 				return false;
+			} else if(!emailRegexCheck(email)) {
+				alert("이메일 형식을 확인해주세요");
+				return false;
 			}
 
 			if(passwd == "" || passwd == null) {

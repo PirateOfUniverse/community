@@ -25,7 +25,7 @@ class MemberServiceTest {
     @DisplayName("회원가입 확인")
     void register() throws Exception {
         // given
-        Member member = new Member(email, password, authorities);
+        Member member = new Member();
 
         String rawPasswd = "1234";
         String encodePasswd = encoder.encode(rawPasswd);
@@ -48,12 +48,12 @@ class MemberServiceTest {
     @DisplayName("중복 회원 확인")
     void duplicateMember() {
         // given
-        Member member1 = new Member(email, password, authorities);
+        Member member1 = new Member();
         member1.setEmail("malang@naver.com");
         member1.setPasswd("a");
         member1.setNick("말랑");
 
-        Member member2 = new Member(email, password, authorities);
+        Member member2 = new Member();
         member2.setEmail("malang@naver.com");
         member2.setPasswd("b");
         member2.setNick("aaa");
@@ -73,7 +73,7 @@ class MemberServiceTest {
     @DisplayName("로그인 테스트")
     void loginTest() {
         // given
-        Member member = new Member(email, password, authorities);
+        Member member = new Member();
         member.setEmail("malang@naver.com");
         String passwd = "1234";
         String enPasswd = encoder.encode(passwd);

@@ -23,7 +23,7 @@ class MemberControllerTest {
     @Test
     void loginTest() throws Exception {
         // given
-        Member member = new Member(email, password, authorities);
+        Member member = new Member();
         member.setEmail("wjdals3486@naver.com");
         member.setPasswd("1234");
         member.setNick("malanggu");
@@ -52,7 +52,7 @@ class MemberControllerTest {
     @Test
     void updateTest() throws Exception {
         // given
-        Member member = new Member(email, password, authorities);
+        Member member = new Member();
         String passwd = "1234";
         member.setEmail("wjdals3486@naver.com");
         member.setNick("malanggu");
@@ -73,6 +73,7 @@ class MemberControllerTest {
 
         // then
         System.out.println(member.getPasswd());
+        System.out.println(member.getNick());
         System.out.println("로그인 완료 = true, 로그인 실패 = false");
         System.out.println("올바른 비밀번호를 넣었을때 로그인: " + match);
     }

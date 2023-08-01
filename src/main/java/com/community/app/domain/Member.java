@@ -26,7 +26,7 @@ public class Member {
 
     public Member(String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.email = email;
-        this.passwd = passwd;
+        this.passwd = password;
         this.authorities = authorities;
     }
 

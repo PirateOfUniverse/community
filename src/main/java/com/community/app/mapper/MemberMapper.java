@@ -30,7 +30,7 @@ public interface MemberMapper {
     public List<Reply> showMyReplies(@Param("idx") int idx,
                                      @Param("start") int start, @Param("offset") int offset);
     public Integer showMyRepliesCount(int idx);
-    public int updateMember(MemberUpdateDto updateDto);
+    public int updateMember(MemberUpdateDto dto);
     public int deleteMember(int idx);
 
 }

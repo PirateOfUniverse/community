@@ -213,23 +213,55 @@ public class MemberController {
     }
 
     // 회원정보 수정 - Post 수정 작업
+//    @PostMapping("/myPage/updateMember")
+//    public String updateMember(MemberUpdateDto dto, Authentication authentication) {
+//        if(dto.getPasswd() != "" && dto.getPasswd() != null) {
+//            // 비밀번호 변경이 이루어졌을 경우
+//            // BCryptPasswordEncoder로 비밀번호 인코딩 시켜서 보안성 강화
+//            dto.setPasswd(encoder.encode(dto.getPasswd()));
+//        }
+//        memberService.updateMember(dto); // db내부의 member테이블에 회원정보 업데이트
+//
+//        // 현재 인증된 사용자의 세션 정보 가져오기
+//        Object principal = authentication.getPrincipal();
+//        if (principal instanceof UserCustom) {
+//            UserCustom userCustom = (UserCustom) principal;
+//            userCustom.setUsername(dto.getNick()); // 세션 정보(닉네임) 변경하기
+//        } else if(principal instanceof PrincipalDetails) {
+//            PrincipalDetails principalDetails = (PrincipalDetails) principal;
+//            principalDetails.setUsername(dto.getNick()); // 세션 정보(닉네임) 변경하기
+//        }
+//
+//        return "redirect:/";
+//    }
+
     @PostMapping("/myPage/updateMember")
     public String updateMember(MemberUpdateDto dto, Authentication authentication) {
-        if(dto.getPasswd() != "" && dto.getPasswd() != null) {
-            // 비밀번호 변경이 이루어졌을 경우
-            // BCryptPasswordEncoder로 비밀번호 인코딩 시켜서 보안성 강화
+
+        // dto가 null인지 확인
+        if (dto == null) {
+            // 에러 처리 (예: 로그 출력)
+            return "error"; // 또는 적절한 오류 페이지로 이동
+        }
+
+        // 비밀번호와 닉네임 정보가 제대로 전달되는지 확인
+        System.out.println("Passwd: " + dto.getPasswd());
+        System.out.println("Nick: " + dto.getNick());
+
+        /////////////////////////////////////////////////////////////////
+        if (dto.getPasswd() != null && !dto.getPasswd().isEmpty()) {
             dto.setPasswd(encoder.encode(dto.getPasswd()));
         }
-        memberService.updateMember(dto); // db내부의 member테이블에 회원정보 업데이트
 
-        // 현재 인증된 사용자의 세션 정보 가져오기
+        memberService.updateMember(dto);
+
         Object principal = authentication.getPrincipal();
-        if (principal instanceof UserCustom) {
+        if(principal instanceof UserCustom) {
             UserCustom userCustom = (UserCustom) principal;
-            userCustom.setUsername(dto.getNick()); // 세션 정보(닉네임) 변경하기
+            userCustom.setUsername(dto.getNick());
         } else if(principal instanceof PrincipalDetails) {
             PrincipalDetails principalDetails = (PrincipalDetails) principal;
-            principalDetails.setUsername(dto.getNick()); // 세션 정보(닉네임) 변경하기
+            principalDetails.setUsername(dto.getNick());
         }
 
         return "redirect:/";

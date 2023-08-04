@@ -43,18 +43,17 @@
             <ul>
                 <li>
                     <a th:class="${paging.startPage == 1} ? 'disabled' : ''"
-                       th:href="@{/board/{category}(category=${category},
-                    nowPage=${paging.startPage-1},
+                       th:href="@{/myPage/myPosts(nowPage=${paging.startPage-1},
                     cntPerPage=${paging.cntPerPage})}">&laquo;</a>
                 </li>
                 <li th:each="i : ${#numbers.sequence(paging.startPage, paging.endPage)}">
-                    <a th:href="@{/board/{category}(category=${category},nowPage=${i},cntPerPage=${paging.cntPerPage})}"
+                    <a th:href="@{/myPage/myPosts(nowPage=${i},cntPerPage=${paging.cntPerPage})}"
                        th:class="${i} == ${paging.nowPage} ? 'active' : ''"
                        th:text="${i}"></a>
                 </li>
                 <li>
                     <a  th:class="${paging.endPage == paging.lastPage} ? 'disabled' : ''"
-                        th:href="@{/board/{category}(category=${category},
+                        th:href="@{/myPage/myPosts(
                     nowPage=${paging.endPage+1},
                     cntPerPage=${paging.cntPerPage})}">&raquo;</a>
                 </li>

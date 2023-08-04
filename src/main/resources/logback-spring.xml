@@ -7,7 +7,7 @@
     </appender>
 
     <logger name="org.mybatis" level="DEBUG" />
-    <!-- 기타 로거 설정... -->
+    <!-- 기타 로거 설정 -->
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

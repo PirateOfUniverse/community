@@ -44,7 +44,7 @@ public class AdminController {
         int totalPost = adminService.adminShowPostsCount(); // 전체 게시글 개수
         PagingVO vo = methods.paging(totalPost, nowPage, cntPerPage); // 페이징 메서드
 
-        model.addAttribute("data", adminService.adminShowPosts(vo.getStart(), vo.getOffset()));
+        model.addAttribute("data", adminService.adminShowPosts(vo.getStart(), vo.getEnd()));
         model.addAttribute("paging", vo);
 
         return "managePosts";
@@ -66,7 +66,7 @@ public class AdminController {
         int totalPost = adminService.adminShowPostsCount();
         PagingVO vo = methods.paging(totalPost, nowPage, cntPerPage);
 
-        model.addAttribute("data", adminService.adminShowReply(vo.getStart(), vo.getOffset()));
+        model.addAttribute("data", adminService.adminShowReply(vo.getStart(), vo.getEnd()));
         model.addAttribute("paging", vo);
 
         return "manageReplies";
@@ -92,7 +92,7 @@ public class AdminController {
         int totalPost = adminService.adminShowMemberCount();
         PagingVO vo = methods.paging(totalPost, nowPage, cntPerPage);
 
-        model.addAttribute("data", adminService.adminShowMember(vo.getStart(), vo.getOffset()));
+        model.addAttribute("data", adminService.adminShowMember(vo.getStart(), vo.getEnd()));
         model.addAttribute("paging", vo);
 
         return "manageMembers";
@@ -115,7 +115,7 @@ public class AdminController {
         int totalPost = adminService.adminShowNoticeCount();
         PagingVO vo = methods.paging(totalPost, nowPage, cntPerPage);
 
-        model.addAttribute("data", adminService.adminShowNotices(vo.getStart(), vo.getOffset()));
+        model.addAttribute("data", adminService.adminShowNotices(vo.getStart(), vo.getEnd()));
         model.addAttribute("paging", vo);
 
         return "manageNotices";
@@ -147,7 +147,7 @@ public class AdminController {
         int totalPost = adminService.adminShowNoticeCount();
         PagingVO vo = methods.paging(totalPost, nowPage, cntPerPage);
 
-        model.addAttribute("data", adminService.adminShowNotices(vo.getStart(), vo.getOffset()));
+        model.addAttribute("data", adminService.adminShowNotices(vo.getStart(), vo.getEnd()));
         model.addAttribute("paging", vo);
 
         return "notice";

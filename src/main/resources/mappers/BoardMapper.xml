@@ -90,7 +90,7 @@
         cte
         WHERE pidx=#{pidx}
         ORDER BY
-        path;
+        path, regdate;
     </select>
 
     <!-- 댓글 개수 증가! -->

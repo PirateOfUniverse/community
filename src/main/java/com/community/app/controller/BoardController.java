@@ -75,9 +75,10 @@ public class BoardController {
 //        System.out.println(category);
 //        System.out.println(boardCategory);
 
+        model.addAttribute("engCategory", category);
         model.addAttribute("category", boardCategory);
         model.addAttribute("paging", vo);
-        model.addAttribute("data", boardService.pagingBoard(category, vo.getStart(), vo.getOffset()));
+        model.addAttribute("data", boardService.pagingBoard(category, vo.getStart(), vo.getEnd()));
         return "board";
     }
 
@@ -108,7 +109,7 @@ public class BoardController {
 
         model.addAttribute("category", boardCategory);
         model.addAttribute("paging", vo);
-        model.addAttribute("data", boardService.searchPostsByCategory(category, keyword, vo.getStart(), vo.getOffset()));
+        model.addAttribute("data", boardService.searchPostsByCategory(category, keyword, vo.getStart(), vo.getEnd()));
 
         return "board";
     }
@@ -249,8 +250,9 @@ public class BoardController {
         int totalPost = boardService.searchPostsCount(keyword);
         PagingVO vo = methods.paging(totalPost, nowPage, cntPerPage);
 
+        model.addAttribute("keyword", keyword);
         model.addAttribute("paging", vo);
-        model.addAttribute("data", boardService.searchPostsAll(keyword, vo.getStart(), vo.getOffset()));
+        model.addAttribute("data", boardService.searchPostsAll(keyword, vo.getStart(), vo.getEnd()));
 
         return "searchPosts";
     }

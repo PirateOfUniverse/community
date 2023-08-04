@@ -154,7 +154,7 @@ public class MemberController {
         int total = memberService.showMyPostsCount(idx);
         PagingVO vo = methods.paging(total, nowPage, cntPerPage);
 
-        model.addAttribute("data", memberService.showMyPosts(idx, vo.getStart(), vo.getOffset()));
+        model.addAttribute("data", memberService.showMyPosts(idx, vo.getStart(), vo.getEnd()));
         model.addAttribute("paging", vo);
 
         return "myPosts";
@@ -172,7 +172,7 @@ public class MemberController {
         PagingVO vo = methods.paging(total, nowPage, cntPerPage);
         // 카운트한 댓글 수와 현재페이지, 한페이지당 댓글 개수를 매개변수로 페이징
 
-        model.addAttribute("data", memberService.showMyReplies(idx, vo.getStart(), vo.getOffset()));
+        model.addAttribute("data", memberService.showMyReplies(idx, vo.getStart(), vo.getEnd()));
         // 위에서 받아온 정보들(고유번호, 페이징vo의 정보)을 바탕으로 댓글을 보여주기위해 모델에 data란 이름으로 담음
         model.addAttribute("paging", vo);
         // 페이징용 모델

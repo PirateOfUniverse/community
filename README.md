@@ -21,72 +21,13 @@
 </div>
 
 
-<div><h2>데이터베이스 테이블</h2></div>
-
-```
-CREATE TABLE member(
-	idx int NOT NULL AUTO_INCREMENT PRIMARY KEY, # 회원 고유 번호
-	email VARCHAR(50) NOT NULL, # 회원 이메일
-	passwd VARCHAR(255), # 계정 비밀번호
-	nick VARCHAR(12) NOT NULL, # 회원 닉네임
-	role VARCHAR(20) NOT NULL, # 회원 권한
-	provider VARCHAR(50), # OAuth2회원가입 시 회원 정보를 전달해주는 사이트(Google, Naver)
-	providerId VARCHAR(255), # OAuth2회원가입 시 생성되는 회원의 고유 id
-	regdate DATETIME # 가입일자
-);
-
-CREATE TABLE post(
-	pidx INT NOT NULL AUTO_INCREMENT PRIMARY KEY, # 게시글 고유 번호
-	idx INT, # 게시글 작성자(회원)의 고유 번호
-	title VARCHAR(200) NOT NULL, # 게시글 제목
-	writer VARCHAR(20) NOT NULL, # 게시글 작성자(회원 닉네임)
-	category VARCHAR(20) NOT NULL, # 게시글이 속한 카테고리
-	content TEXT NOT NULL, # 게시글 내용
-	replyCount INT, # 게시글의 댓글 수
-	hit INT, # 게시글 조회수
-	heartCount INT, # 게시글 추천 수
-	regdate DATETIME, # 게시글 작성일자
-	FOREIGN KEY(idx) REFERENCES member(idx)
-);
-
-CREATE TABLE reply(
-	ridx INT NOT NULL AUTO_INCREMENT, # 댓글 고유 번호
-	pidx INT NOT NULL, # 댓글이 속한 게시글의 고유 번호
-	idx INT NOT NULL, # 댓글을 작성한 작성자의 고유 번호
-	reRidxNum INT, #대댓글이 속한 댓글의 번호(ridx)
-	ridxDepth INT NOT NULL, # 대댓글의 깊이 
-	replyWriter VARCHAR(12) NOT NULL, # 댓글 작성자의 닉네임 
-	replyContent TEXT NOT NULL, # 댓글 내용
-	originReplyWriter VARCHAR(12),
-	regdate DATETIME, # 댓글 작성 시간
-	PRIMARY KEY(ridx),
-	FOREIGN KEY(pidx) REFERENCES post(pidx) ON DELETE CASCADE
-);
-
-CREATE TABLE heart(
-	hidx INT NOT NULL AUTO_INCREMENT, # 게시물 추천의 고유 번호
-	pidx INT NOT NULL, # 추천을 누른 게시물의 고유 번호
-	idx INT NOT NULL, # 추천을 누른 회원의 고유 번호
-	PRIMARY KEY(hidx),
-	FOREIGN KEY(pidx) REFERENCES post(pidx) ON DELETE CASCADE,
-	FOREIGN KEY(idx) REFERENCES member(idx)
-);
-
-CREATE TABLE notice(
-	nidx INT NOT NULL AUTO_INCREMENT PRIMARY KEY, # 공지글 고유 번호
-	title VARCHAR(200) NOT NULL, # 공지글 제목
-	writer VARCHAR(12) NOT NULL, # 공지글 작성자(관리자)
-	content TEXT NOT NULL, # 공지글 내용
-	regdate datetime # 공지글 작성일자
-);
-
-```
 
 <div><h2>프로젝트 정보</h2></div>
 
 > 개발기간: 2023.03.20 ~ 2023.07.26 
 
 > 개발인원: 1명
+
 
 
 <div><h2>주요 기능</h2></div>
@@ -101,6 +42,8 @@ CREATE TABLE notice(
 * 회원이 작성한 게시글/댓글 관리와 회원정보를 수정할 수 있습니다
 <h4>🤍 관리자 페이지</h4>
 * 관리자 로그인 시 전체 게시글/댓글/회원 관리를 할 수 있으며, 공지사항을 작성할 수 있습니다 
+
+
 
 <div><h2>테스트 영상</h2></div>
  ※ 해당 프로젝트의 post(게시물)테이블에는 더미데이터가 들어있습니다.

@@ -47,7 +47,6 @@ public class MemberController {
     // 회원가입 - 일반 회원 가입 페이지(OAuth2 X)
     @PostMapping("/register")
     public String memberRegister(Member member) {
-        member.setRole("ROLE_USER");
         String rawPasswd = member.getPasswd();
         String encodedPasswd = encoder.encode(rawPasswd);
         member.setPasswd(encodedPasswd);

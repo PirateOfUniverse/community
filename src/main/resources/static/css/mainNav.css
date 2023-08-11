@@ -123,3 +123,8 @@
         white-space: nowrap;
         border-left: 1px solid #ccc;
       }
+
+       pre {
+           white-space: pre-wrap; /* 줄바꿈 유지, 공백과 줄 바꿈 유지 */
+           word-wrap: break-word; /* 긴 단어를 여러 줄로 나누기 */
+       }

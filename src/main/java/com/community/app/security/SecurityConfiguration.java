@@ -32,7 +32,7 @@ public class SecurityConfiguration {
         http.csrf().disable();
         http
                 .authorizeRequests()
-                .antMatchers("/board/**", "/search").authenticated()
+                .antMatchers("/board/**", "/search", "/postDetail").authenticated()
                 .antMatchers("/admin/**").access("hasAuthority('ROLE_ADMIN')")
                 .antMatchers("/login", "/register").permitAll()
                 .anyRequest().permitAll();

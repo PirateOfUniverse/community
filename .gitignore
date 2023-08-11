@@ -41,3 +41,6 @@ MailService.java
 MailConfiguration.java
 
 *.properties
+
+## ETC ##
+!**/src/test/com/community/app/**

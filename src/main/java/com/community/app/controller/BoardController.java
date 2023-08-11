@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Controller
 public class BoardController {
@@ -163,12 +164,13 @@ public class BoardController {
     }
 
     // 게시물 삭제
+    @ResponseBody
     @PostMapping("/deletePost")
-    public String deletePost(@RequestParam(value="pidx", required = false) int pidx,
+    public void deletePost(@RequestParam(value="pidx", required = false) int pidx,
                              @RequestParam(value="category", required = false) String category) {
         boardService.deletePost(pidx);
 
-        return "redirect:/board/"+category;
+        //return "redirect:/board/"+category;
     }
 
     /* 댓글 관련 기능 */

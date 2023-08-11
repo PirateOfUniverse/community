@@ -66,14 +66,16 @@
 
 		ClassicEditor
 			.create( document.querySelector( '#editor' ), {
-			 	language: 'ko'
+				language: 'ko',
+				//plugins: [ 'Paragraph' ] // Paragraph 플러그인 활성화
 			} )
 			.then( newEditor => {
-       			editor = newEditor;
-    		} )
+				editor = newEditor;
+			} )
 			.catch( error => {
 				console.error( error );
 			} );
+
 
 		function checkForm() {
 			let category = $("#category").val();

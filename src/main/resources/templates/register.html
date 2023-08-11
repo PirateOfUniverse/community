@@ -83,7 +83,7 @@
 			$.ajax({
 			type: "get",
 			async: false,
-			url: "http://localhost:8080/email-check",
+			url: "http://localhost:8080/emailCheck",
 			data: {email: email},
 			success: function(data) {
 			if(data == 1) {
@@ -117,7 +117,7 @@
 			const email = $("#email").val();
 			$.ajax({
 				type: "post",
-				url: "http://localhost:8080/mail-confirm",
+				url: "http://localhost:8080/mailConfirm",
 				data: {email: email},
 				success: function(data) {
 					alert("인증번호가 발송되었습니다");
@@ -183,7 +183,7 @@
 			let nick = $("#nick").val();
 			$.ajax({
 				type: "get",
-				url: "http://localhost:8080/nick-check",
+				url: "http://localhost:8080/nickCheck",
 				data: {nick: nick},
 				dataType: "json",
 				success: function(data) {

@@ -56,7 +56,7 @@ public class MemberController {
 
     // 회원가입 - 이메일 중복체크
     @ResponseBody
-    @GetMapping("/email-check")
+    @GetMapping("/emailCheck")
     public int duplicateEmail(Member member) {
         int result = memberService.duplicateEmail(member);
         return result;
@@ -64,7 +64,7 @@ public class MemberController {
 
     // 회원가입 - 메일로 랜덤 코드 전송
     @ResponseBody
-    @PostMapping("/mail-confirm")
+    @PostMapping("/mailConfirm")
     public String mailConfirm(@RequestParam("email") String email) throws Exception {
         String randomCode = mailService.sendSimpleMessage(email);
         System.out.println(randomCode);
@@ -74,7 +74,7 @@ public class MemberController {
 
     // 회원가입 - 닉네임 중복체크
     @ResponseBody
-    @GetMapping("/nick-check")
+    @GetMapping("/nickCheck")
     public int duplicateNick(Member member) {
         int result = memberService.duplicateNick(member);
         return result;

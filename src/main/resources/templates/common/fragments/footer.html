@@ -6,19 +6,9 @@
 <link rel="stylesheet" th:href="@{/css/footer.css}">
 <div class="footer-container">
     <div class="footer-right">
-        <h3>community</h3>
+        <h3>Delight</h3>
         <p>문의 메일 주소: wjdals3486@naver.com</p>
-        <p>ⓒ 2022 Community All Rights Reserved</p>
-    </div>
-    <div class="footer-left" th:if="${session.memberInfo == null}"></div>
-    <div class="footer-left" th:if="${session.memberInfo != null and session.memberInfo.role == 'admin'}">
-        <h3>관리자 모드</h3>
-        <div class="admin-list">
-            <ul>
-                <li><a href="/insertNotice">공지사항 등록</a></li>
-                <li><a href="/keywordSetting">키워드 등록</a></li>
-            </ul>
-        </div>
+        <p>ⓒ 2023 Delight All Rights Reserved</p>
     </div>
 </div>
 </html>

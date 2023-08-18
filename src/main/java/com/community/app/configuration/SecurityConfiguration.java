@@ -1,4 +1,4 @@
-package com.community.app.security;
+package com.community.app.configuration;
 
 import com.community.app.security.oauth.PrincipalOauth2UserService;
 import org.springframework.context.annotation.Bean;

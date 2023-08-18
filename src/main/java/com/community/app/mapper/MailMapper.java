@@ -1,4 +1,4 @@
-package com.community.app.service;
+package com.community.app.mapper;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 
 @Service
-public interface MailServiceInter {
+public interface MailMapper {
 
     // 메일 내용 작성
     MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException;

@@ -244,6 +244,7 @@ public class MemberController {
         }
 
         // 비밀번호와 닉네임 정보가 제대로 전달되는지 확인
+        System.out.println("idx: " + dto.getIdx());
         System.out.println("Passwd: " + dto.getPasswd());
         System.out.println("Nick: " + dto.getNick());
 
@@ -276,7 +277,6 @@ public class MemberController {
 
 
     // 회원가입 인증 메일 https://badstorage.tistory.com/38
-
 
     /*@GetMapping("/password-test")
     public void passwdTest() {

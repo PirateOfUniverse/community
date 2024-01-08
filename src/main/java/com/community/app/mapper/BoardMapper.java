@@ -41,4 +41,6 @@ public interface BoardMapper {
     public List<Post> searchPostsAll(@Param("keyword") String keyword,
                                      @Param("start") int start, @Param("offset") int offset);
 
+    public int getVoteInPost(int pidx);
+
 }

@@ -39,6 +39,41 @@ pre {
 	font-size: 14px;
 }
 
+/* 투표 관련입니당 */
+.vote {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 80px;
+    /* 다른 스타일 속성을 추가할 수 있습니다. */
+    /* width: 100%; 가로 중앙 정렬을 위해 부모 요소의 너비를 차지하도록 설정 */
+    /* height: 100vh; 세로 중앙 정렬을 위해 뷰포트 높이를 사용합니다. */
+}
+
+.vote table {
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+}
+
+.vote .vote-sub {
+    width: 200px;
+    height: 30px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.vote .vote-sub:hover {
+    background-color: #B9E0FD;
+    cursor: pointer;
+}
+
+/* 선택된 버튼의 스타일 설정 */
+.vote .vote-sub.selected {
+    background-color: #B9E0FD;
+}
+
+
 .reply {
 	width: 90%;
 	margin: 50px auto 0 auto;

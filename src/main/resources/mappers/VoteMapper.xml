@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.community.app.mapper.VoteMapper">
+
+    <!-- 모든 투표 가져오기 - 지금은 사용 X -->
+    <select id="getVoteList" resultType="com.community.app.domain.Vote">
+        SELECT * FROM vote ORDER BY regdate DESC
+    </select>
+
+<!--    &lt;!&ndash; postDetail(게시물들어가서볼때) 불러올때 vidx 가져오기 &ndash;&gt;-->
+<!--    <select id="getVidxFromPost" resultType="Integer">-->
+<!--        SELECT postVote FROM post WHERE pidx=#{pidx}-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 뷰단에서 post의 postVote값 가져와서 vote테이블의 데이터 가져오기 &ndash;&gt;-->
+<!--    <select id="getVote" resultType="com.community.app.domain.Vote">-->
+<!--        SELECT * FROM vote WHERE vidx=#{vidx}-->
+<!--    </select>-->
+
+    <select id="getVidxFromPost" resultType="com.community.app.domain.Vote">
+        SELECT v.* FROM vote v JOIN post p ON v.vidx = p.postVote
+        WHERE p.pidx = #{pidx}
+    </select>
+
+    <!-- 투표항목들 뷰단으로 가져오기 -->
+    <select id="getVoteSubList" resultType="com.community.app.dto.VoteSubDto">
+        SELECT * FROM voteSub WHERE vidx=#{vidx}
+    </select>
+
+    <!-- 회원 한명이 투표를 완료했는지 확인 -->
+    <select id="showVoteOrNot" resultType="Integer">
+        SELECT COUNT(*) from voter WHERE vidx=#{vidx} and idx=#{idx}
+    </select>
+
+    <!-- 투표만들기 -->
+    <insert id="makeVote" parameterType="com.community.app.domain.Vote">
+        INSERT INTO vote VALUES(NULL,#{question},#{itemCount},0,now())
+    </insert>
+
+    <!-- 투표항목 만들때(게시물 작성시) 필요한 vidx 가져오기 -->
+    <select id="getVoteVidx" resultType="Integer">
+        SELECT vidx FROM vote WHERE question=#{question} ORDER BY vidx DESC LIMIT 1
+    </select>
+
+    <select id="tempVidx" resultType="Integer">
+        SELECT vidx FROM vote WHERE vidx=#{vidx}
+    </select>
+
+    <!-- 투표 항목 집어넣기(만들기) -->
+    <insert id="makeVoteSub" parameterType="com.community.app.dto.VoteSubDto">
+        INSERT INTO voteSub VALUES(null,#{vidx},#{answer},0)
+    </insert>
+
+    <!-- 회원이 투표한 항목 표시 -->
+    <select id="whatVoterVote" resultType="Integer">
+        SELECT vsidx FROM voter WHERE idx=#{idx} AND vidx=#{vidx}
+    </select>
+
+    <!-- 투표할때 로직들 -->
+    <!-- 투표하기(voter로직) -->
+    <insert id="votingVoter" parameterType="com.community.app.dto.VoterDto">
+        INSERT INTO voter VALUES(null,#{vidx},#{vsidx},#{idx},now())
+    </insert>
+
+    <!-- 투표 테이블의 전체투표수를 올리기 -->
+    <update id="updateVoterVote" parameterType="com.community.app.domain.Vote">
+        UPDATE vote SET voteTotal=voteTotal+1 WHERE vidx=#{vidx}
+    </update>
+
+    <!-- 투표 항목의 득표수 올리기 -->
+    <update id="updateVoterVoteSub" parameterType="com.community.app.dto.VoteSubDto">
+        UPDATE voteSub SET numberOfVotes=numberOfVotes+1 WHERE vsidx=#{vsidx} AND vidx=#{vidx}
+    </update>
+
+</mapper>

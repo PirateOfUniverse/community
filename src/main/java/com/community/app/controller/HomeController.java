@@ -25,11 +25,18 @@ public class HomeController {
     @GetMapping("/")
     public String main(Model model) {
         model.addAttribute("freeBoard", boardService.showPostByHeart("freeBoard"));
-        model.addAttribute("ent", boardService.showPostByHeart("ent"));
+        model.addAttribute("friendship", boardService.showPostByHeart("friendship"));
         model.addAttribute("daily", boardService.showPostByHeart("daily"));
-        model.addAttribute("hobby", boardService.showPostByHeart("hobby"));
+        model.addAttribute("life", boardService.showPostByHeart("life"));
+        model.addAttribute("job", boardService.showPostByHeart("job"));
 
         return "main";
+    }
+
+    @GetMapping("/notMember")
+    public String notMember() {
+        // 사용자가 로그인을 하지 않고 게시판에 접근할 경우 띄울 창
+        return "notMember";
     }
 
     /* 테스트 */

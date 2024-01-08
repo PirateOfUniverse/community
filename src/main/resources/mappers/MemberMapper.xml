@@ -11,7 +11,7 @@
     </select>
 
     <select id="duplicateNick" parameterType="com.community.app.domain.Member" resultType="int">
-        SELECT COUNT(nick) FROM member WHERE nick=#{nick}
+        SELECT COUNT(nick) FROM member WHERE BINARY nick=#{nick}
     </select>
 
     <select id="selectMemberOne" resultType="com.community.app.domain.Member">

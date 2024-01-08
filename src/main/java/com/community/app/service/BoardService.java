@@ -126,4 +126,10 @@ public class BoardService implements BoardMapper {
     public List<Post> searchPostsAll(String keyword, int start, int offset) {
         return mapper.searchPostsAll(keyword, start, offset);
     }
+
+    @Override
+    public int getVoteInPost(int pidx) {
+        return mapper.getVoteInPost(pidx);
+    }
+
 }

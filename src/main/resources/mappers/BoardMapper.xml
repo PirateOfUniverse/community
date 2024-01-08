@@ -7,7 +7,7 @@
     <insert id="writePost">
         INSERT INTO
         <if test="category != null">
-            post VALUES(NULL,#{idx},#{title},#{writer},#{category},#{content},0,0,0,now())
+            post VALUES(NULL,#{idx},#{title},#{writer},#{category},#{content},0,0,0,#{postVote},now())
         </if>
     </insert>
 
@@ -114,8 +114,15 @@
     </update>
 
     <!-- 게시글 삭제 -->
-    <delete id="deletePost">
-        DELETE FROM post WHERE pidx=#{pidx}
+    <delete id="deletePost" parameterType="int">
+<!--        DELETE FROM post WHERE pidx=#{pidx}-->
+<!--        DELETE p, v FROM post as p-->
+<!--        INNER JOIN vote as v ON p.postVote = v.vidx-->
+<!--        WHERE pidx=#{pidx}-->
+        DELETE p, v
+        FROM post AS p
+        LEFT JOIN vote AS v ON p.postVote = v.vidx
+        WHERE p.pidx = #{pidx}
     </delete>
 
     <!-- 페이징을 위한 검색된 포스트 수 세기(전체데이터 검색) -->
@@ -133,9 +140,9 @@
 
     <!-- 특정 게시판 검색 -->
     <select id="searchPostsByCategory" resultType="com.community.app.domain.Post">
-        SELECT * FROM post WHERE category=#{category} AND
+        SELECT * FRLOM post WHERE category=#{category} AND
         (title LIKE CONCAT('%', #{keyword}, '%') OR content LIKE CONCAT('%', #{keyword}, '%'))
-        ORDER BY regdate DESC LIMIT #{start}, #{offset}
+        ORDER BY regdate DESC IMIT #{start}, #{offset}
     </select>
 
     <!-- 전체 게시판 내 검색과 페이징 -->
@@ -143,6 +150,13 @@
         SELECT * FROM post WHERE
         title LIKE CONCAT('%', #{keyword}, '%') OR content LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY regdate DESC limit #{start}, #{offset}
+    </select>
+
+    <!-- 게시판에 등록된 투표 가져오기 -->
+    <select id="getVoteInPost" resultType="com.community.app.domain.Post">
+        SELECT postVote FROM post WHERE pidx=#{pidx}
+<!--        SELECT CASE WHEN postVote IS NOT NULL THEN 1 ELSE 0-->
+<!--        END AS voteStatus, postVote FROM post WHERE pidx=#{pidx}-->
     </select>
 
     <!--<if test="category != ''">

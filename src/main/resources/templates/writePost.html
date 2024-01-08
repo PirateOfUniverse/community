@@ -22,15 +22,15 @@
 	<div class="change-page">
       <h3>게시글 등록</h3>
       <div class="contents">
-        <form method="post" onsubmit="return checkForm()" action="writePost">
+        <form id="write-form" method="post" action="/writePost" onsubmit="return checkForm()">
         	<div class="write">
 	        	<div class="select-board">
 	                <select class="category" id="category" name="category">
 	                  <option value="">게시판 선택</option>
-	                  <option value="daily">일상</option>
-	                  <option value="counseling">고민상담</option>
-	                  <option value="hobby">취미</option>
-	                  <option value="ent">연예</option>
+	                  <option value="daily">가벼운고민</option>
+	                  <option value="friendship">친구/연애/가족고민</option>
+	                  <option value="life">인생고민</option>
+	                  <option value="job">취업/직장고민</option>
 	                  <option value="freeBoard">자유게시판</option>
 	                </select>
 	        	</div>
@@ -40,12 +40,23 @@
 	        	<div>
 	                <textarea class="write-area" id="editor" name="content" placeholder="내용을 입력하세요"></textarea>
 	        	</div>
-	          <div class="bottom-btn">
-				  <input type="hidden" name="idx" th:value="${#authentication.principal.idx}"/>
-				  <input type="hidden" class="writer" name="writer"
-						th:value="${#authentication.name}" />
-				  <input type="submit" value="등록" class="insert-btn" />
-	          </div>
+				<input type="button" value="투표함 만들기" id="make-vote" />
+				<div id="hiding-make-vote-div" class="hiding-make-vote-div" style="display:none;">
+					<input type="text" name="question" id="question" placeholder="질문 입력" />
+					<div id="item-container">
+						<input type="text" name="items[]" class="items" placeholder="항목 1">
+						<input type="text" name="items[]" class="items" placeholder="항목 2">
+					</div>
+<!--					<input type="hidden" id="items-array" name="itemsArray" value="" />-->
+					<!-- 필요한 만큼 항목을 추가할 수 있습니다 -->
+					<input type="button" value="항목 더 만들기" onclick="addItemField()" />
+				</div>
+				<div class="bottom-btn">
+					<input type="hidden" name="idx" th:value="${#authentication.principal.idx}"/>
+					<input type="hidden" class="writer" name="writer"
+						   th:value="${#authentication.name}" />
+					<input type="submit" value="등록" class="insert-btn" />
+				</div>
         	</div>
         </form>
       </div>
@@ -76,30 +87,111 @@
 				console.error( error );
 			} );
 
+		let showMakeVote = false;
+		$("#make-vote").click(function() {
+			if($("#hiding-make-vote-div").css("display") == "none") {
+				$("#hiding-make-vote-div").show();
+				showMakeVote = true;
+			} else {
+				$("#hiding-make-vote-div").hide();
+				showMakeVote = false;
+			}
+			console.log("showMakeVote: " + showMakeVote);
+		})
+
+		var itemCounter = 2; // 항목 input에 번호 붙이는 용도. 큰 의미는 없음
+		function addItemField() {
+			var container = document.getElementById("item-container");
+			var makeInput = document.createElement("input"); // 투표항목 추가
+			var makeDeleteBox = document.createElement("input"); // 투표항목 추가 시 삭제 버튼
+
+			makeInput.type = "text"; // text 타입의 input
+			makeInput.name = "items[]"; // input의 name 설정
+			makeInput.class = "items"; // input의 class 설정
+			//makeInput.name = "items[" + itemCounter + "]";
+			makeInput.placeholder = "항목 " + (itemCounter + 1); // input의 placeholder 설정
+			container.appendChild(makeInput); // 만든 input을 container안에 넣기
+			itemCounter++;
+
+			// 추가한 항목 다시 없애는 버튼 만들기
+			makeDeleteBox.type = "button"; // button타입의 input
+			makeDeleteBox.class = "delete-box"; // input의 class설정
+			makeDeleteBox.value = "X"; // input 의 value 설정
+			container.appendChild(makeDeleteBox); // 만든 input을 container안에 넣기
+
+			// 추가 항목 없애는 버튼에 eventListener 추가하기
+			makeDeleteBox.addEventListener("click", function() {
+				container.removeChild(makeInput);
+				container.removeChild(makeDeleteBox);
+				itemCounter--;
+			});
+
+		}
+
+<!--		$("#item-container").on("click", ".delete-box", function() {-->
+<!--			console.log("2번이쓰임");-->
+<!--			$(this).prev().remove();-->
+<!--			$(this).remove();-->
+<!--			itemCounter&#45;&#45;;-->
+<!--		})-->
 
 		function checkForm() {
-			let category = $("#category").val();
-			let title = $("#title").val();
-			let content = editor.getData();
+         let category = $("#category").val();
+         let title = $("#title").val();
+         let content = editor.getData();
 
-			if(category == "" || category == null) {
-				alert("카테고리를 선택해주세요");
+         if(category == "" || category == null) {
+            alert("카테고리를 선택해주세요");
+            return false;
+         }
+
+         if(title == "" || title == null) {
+            alert("제목을 입력해주세요");
+            return false;
+         }
+
+         if(content == "" || content == null) {
+            alert("내용을 입력해주세요");
+            return false;
+         }
+
+		 console.log("showMakeVote: " + showMakeVote);
+         if (showMakeVote) {
+          	console.log("vote확인. if문 진입 완료");
+
+		  	var question = $("#question").val(); // 투표질문 값
+		  	var inputs = document.querySelectorAll('#item-container input[type="text"]');
+		  	// ↑ 투표 항목 값
+		  	var isEmpty = false; // 투표 항목에 빈 값이 없을때 false(있으면 true)
+
+		  	// 입력 필드 루프(빈값이 있는지 확인)
+		  	inputs.forEach(function (input) {
+		   	 if (input.value.trim() == '') {
+		  		  isEmpty = true; // isEmpty를 true로 만들기(빈칸있음)
+				  console.log("투표항목 필드에 빈칸이 있어요");
+				  // 빈칸이 있음
+				}
+			 });
+
+		  	// 투표 제목 검사
+		  	if (question == "" || question == null) {
+		   	 	alert("투표 제목을 입력해주세요");
+	  	   	 	return false;
+		  	} else if (isEmpty) {
+				alert("모든 항목을 입력해주세요");
 				return false;
-			}
+		  	}
 
-			if(title == "" || title == null) {
-				alert("제목을 입력해주세요");
-				return false;
-			}
+			// itemsArray값을 items-array(hidden타입)에 넣기
+			//$("items-array").val(JSON.stringify(itemsArray));
 
-			if(content == "" || content == null) {
-				alert("내용을 입력해주세요");
-				return false;
-			}
-
-			alert("게시글이 작성되었습니다");
-			return true;
 		}
+
+		alert("게시글이 등록되었습니다");
+		return true; // 폼 제출 허용
+
+      }
+
 	</script>
 </body>
 </html>

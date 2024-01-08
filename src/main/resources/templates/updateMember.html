@@ -38,6 +38,7 @@
         <p id="duplicate-message-nick"></p>
       </div>
       <div>
+        <input type="hidden" id="idx" name="idx" th:value="${member.idx}" />
         <input type="submit" class="update-btn" id="update-btn" value="회원정보 수정"/>
       </div>
     </form>
@@ -136,7 +137,7 @@
 		let recentNick = $("#recent-nick").val();
         $.ajax({
 			type: "get",
-			url: "http://localhost:8080/nick-check",
+			url: "http://localhost:8080/nickCheck",
 			data: {nick: nick},
 			dataType: "json",
 			success: function(data) {

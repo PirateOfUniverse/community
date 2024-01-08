@@ -19,7 +19,7 @@
 		</div>
 		<div class="topPost">
 			<div class="topTable">
-				<div class="category">자유게시판</div>
+				<div class="category">가벼운고민</div>
 				<table>
 					<thead>
 					<tr>
@@ -43,7 +43,7 @@
 				</table>
 			</div>
 			<div class="topTable">
-				<div class="category">연예게시판</div>
+				<div class="category">친구/연애</div>
 				<table>
 					<thead>
 					<tr>
@@ -53,21 +53,21 @@
 					</tr>
 					</thead>
 					<tbody>
-					<tr th:each="ent:${ent}">
+					<tr th:each="friendship:${friendship}">
 						<td>
-							<a th:href="@{/postDetail(pidx=${ent.pidx})}"
-							   th:text="${ent.title}">
+							<a th:href="@{/postDetail(pidx=${friendship.pidx})}"
+							   th:text="${friendship.title}">
 							</a>
 						</td>
-						<td th:text="${ent.writer}"></td>
-						<td th:text="${ent.heartCount}">
+						<td th:text="${friendship.writer}"></td>
+						<td th:text="${friendship.heartCount}">
 						</td>
 					</tr>
 					</tbody>
 				</table>
 			</div>
 			<div class="topTable">
-				<div class="category">취미게시판</div>
+				<div class="category">인생고민</div>
 				<table>
 					<thead>
 					<tr>
@@ -77,21 +77,45 @@
 					</tr>
 					</thead>
 					<tbody>
-					<tr th:each="hobby:${hobby}">
+					<tr th:each="life:${life}">
 						<td>
-							<a th:href="@{/postDetail(pidx=${hobby.pidx})}"
-							   th:text="${hobby.title}">
+							<a th:href="@{/postDetail(pidx=${life.pidx})}"
+							   th:text="${life.title}">
 							</a>
 						</td>
-						<td th:text="${hobby.writer}"></td>
-						<td th:text="${hobby.heartCount}">
+						<td th:text="${life.writer}"></td>
+						<td th:text="${life.heartCount}">
 						</td>
 					</tr>
 					</tbody>
 				</table>
 			</div>
 			<div class="topTable">
-				<div class="category">일상게시판</div>
+				<div class="category">취업/직장</div>
+				<table>
+					<thead>
+					<tr>
+						<th>제목</th>
+						<th>글쓴이</th>
+						<th>추천수</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr th:each="job:${job}">
+						<td>
+							<a th:href="@{/postDetail(pidx=${job.pidx})}"
+							   th:text="${job.title}">
+							</a>
+						</td>
+						<td th:text="${job.writer}"></td>
+						<td th:text="${job.heartCount}">
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="topTable">
+				<div class="category">자유게시판</div>
 				<table>
 					<thead>
 					<tr>

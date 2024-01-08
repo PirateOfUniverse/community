@@ -21,24 +21,46 @@
 	<div class="change-page">
       <h3>게시글 수정</h3>
       <div class="contents">
-        <form method="post" action="updatePost">
+        <form method="post" id="update-form" action="updatePost" onsubmit="return checkForm()">
         	<div class="write" th:each="post:${post}">
 				<div class="select-board">
 					<select class="category" id="category" name="category">
 						<option value="">게시판 선택</option>
-						<option value="daily">일상</option>
-						<option value="counseling">고민상담</option>
-						<option value="hobby">취미</option>
-						<option value="ent">연예</option>
+						<option value="daily">가벼운고민</option>
+						<option value="friendship">친구/연애고민</option>
+						<option value="life">인생고민</option>
+						<option value="job">취업/직장고민</option>
 						<option value="freeBoard">자유게시판</option>
 					</select>
 				</div>
 	        	<div>
-	        		<input type="text" class="title" name="title" th:value="${post.title}" />
+	        		<input type="text" class="title" id="title" name="title" th:value="${post.title}" />
 	        	</div>
 	        	<div>
 	                <textarea class="write-area" id="editor" name="content" th:text="${post.content}"></textarea>
 	        	</div>
+				<div id="modify-vote-div" th:if="${vote != null and not #lists.isEmpty(vote)}" class="vote">
+					<input type="text" name="question" class="question" th:value="${vote.question}" />
+					<input type="hidden" id="vidx" name="vidx" th:value="${vote.vidx}" />
+					<div class="item-container" th:each="voteSub:${voteSub}">
+						<input type="hidden" name="vsidx" th:value="${voteSub.vsidx}" />
+						<input type="text" name="items[]" class="items" th:value="${voteSub.answer}">
+					</div>
+					<input type="hidden" class="items-array" name="itemsArray" value="" />
+					<input type="button" value="항목 더 만들기" onclick="addItemField()" />
+					<input type="button" value="투표 삭제" id="delete-vote" />
+				</div>
+				<input th:if="${vote == null and #lists.isEmpty(vote)}" type="button" value="투표함 만들기" id="make-vote" />
+				<div id="hiding-make-vote-div" class="hiding-make-vote-div" style="display:none;">
+					<input type="text" name="question" class="question" placeholder="질문 입력" />
+					<div class="item-container">
+						<input type="text" name="items[]" class="items" placeholder="항목 1">
+						<input type="text" name="items[]" class="items" placeholder="항목 2">
+					</div>
+					<input type="hidden" class="items-array" name="itemsArray" value="" />
+					<!-- 필요한 만큼 항목을 추가할 수 있습니다 -->
+					<input type="button" value="항목 더 만들기" onclick="addItemField()" />
+				</div>
 				<div class="bottom-btn">
 		          <input type="hidden" name="pidx" th:value="${post.pidx}" />
 		          <input type="submit" value="수정" class="insert-btn" />
@@ -61,6 +83,120 @@
 			.catch( error => {
 				console.error( error );
 			} );
+
+		let showMakeVote = false;
+		$("#make-vote").click(function() {
+			if($("#hiding-make-vote-div").css("display") == "none") {
+				$("#hiding-make-vote-div").show();
+				showMakeVote = true;
+			} else {
+				$("#hiding-make-vote-div").hide();
+				showMakeVote = false;
+			}
+			console.log("showMakeVote: " + showMakeVote);
+		})
+		var modifyDiv = document.getElementById("modify-vote-div");
+		if(modifyDiv) {
+			showMakeVote = true;
+		}
+		$("#delete-vote").click(function() {
+			modify.style.display = none;
+			showMakeVote = false;
+		})
+
+		var itemCounter = 2;
+		function addItemField() {
+			// 투표를 새로 만들 때
+			var container = document.getElementById("item-container");
+			var makeInput = document.createElement("input"); // 투표항목 추가
+			var makeDeleteBox = document.createElement("input"); // 투표항목 추가 시 삭제 버튼
+
+			makeInput.type = "text";
+			makeInput.name = "items[]";
+			makeInput.class = "items";
+			makeInput.placeholder = "항목 " + (itemCounter + 1);
+			container.appendChild(makeInput);
+			itemCounter++;
+
+			makeDeleteBox.type = "button";
+			makeDeleteBox.class = "delete-box";
+			makeDeleteBox.value = "X";
+			container.appendChild(makeDeleteBox);
+
+			makeDeleteBox.addEventListener("click", function() {
+				container.removeChild(makeInput);
+				container.removeChild(makeDeleteBox);
+				itemCounter--;
+			});
+		}
+
+		$("#item-container").on("click", ".delete-box", function() {
+			$(this).prev().remove();
+			$(this).remove();
+			itemCounter--;
+		})
+
+
+		function checkForm() {
+			let category = $("#category").val();
+			let title = #("#title").val();
+			let content = editor.getData();
+
+			if(category == "" || category == null) {
+				alert("카테고리를 선택해주세요");
+				return false;
+			}
+
+			if(title == "" || title == null) {
+				alert("제목을 입력해주세요");
+				return false;
+			}
+
+			if(content == "" || content == null) {
+				alert("내용을 입력해주세요");
+				return false;
+			}
+
+			console.log("showMakeVote: " + showMakeVote);
+			if(showMakeVote) {
+				var question = $(".question").val();
+				var inputs = document.querySelectorAll('.item-container input[type="text"]');
+				var isEmpty = false;
+				var itemsArray = [];
+
+				// 입력 필드 루프
+				inputs.forEach(function (input) {
+					if(input.value.trim() == '') {
+						isEmpty = true;
+						console.log("투표항목 필드에 빈칸이 있어요");
+						// 빈칸이 있을때
+					} else {
+						itemsArray.push(input.value);
+					}
+				});
+
+				if(question == "" || question == null) {
+					alert("투표 제목을 입력해주세요");
+					return false;
+				} else if(isEmpty) {
+					alert("모든 항목을 입력해주세요");
+					return false;
+				}
+
+				$("items-array").val(JSON.stringify(itemsArray));
+				alert("게시글이 등록되었습니다");
+				$("#update-form").submit();
+
+				return false;
+
+			}
+
+			alert("게시글이 등록되었습니다");
+			return true;
+
+		}
+
+
 	</script>
 
 </body>

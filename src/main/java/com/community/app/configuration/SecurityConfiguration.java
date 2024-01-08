@@ -21,6 +21,11 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    public CustomAuthEntryPoint customAuthEntryPoint() {
+        return new CustomAuthEntryPoint();
+    }
+
+    @Bean
     public BCryptPasswordEncoder encodePasswd() {
         return new BCryptPasswordEncoder();
     }
@@ -55,11 +60,15 @@ public class SecurityConfiguration {
                 .loginPage("/login")
                 .userInfoEndpoint()
                 .userService(principalOauth2UserService);
-
         // 구글로그인이 완료된 후 후처리 필요
         // 1.코드받기(인증) 2. 액세스 토큰(권한)
         // 3. 사용자 프로필 정보 가져오기 4. 그 정보를 토대로 회원가입 자동진행
         // 4-2. 추가적인 회원가입이 필요하면 다른 창이 나와야함
+
+        http
+                .exceptionHandling()
+                .authenticationEntryPoint(customAuthEntryPoint());
+
 
         return http.build();
     }

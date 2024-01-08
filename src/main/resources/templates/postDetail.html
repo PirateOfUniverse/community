@@ -15,12 +15,12 @@
 	<div class="change-page">
 		<div class="board-detail" th:each="post:${post}">
 			<div class="title">
-				<p th:text="${post.title}"></p>
+				<p id="title" th:text="${post.title}"></p>
 			</div>
 			<div class="extra">
 				<div class="extra-middle">
 					<span>작성자</span>
-					<span class="writer-name" th:text="${post.writer}"></span>
+					<span class="writer-name" id="writer-name" th:text="${post.writer}"></span>
 					<input type="hidden" name="category" id="category" th:value="${post.category}" />
 					<input type="hidden" name="pidx" id="pidx" th:value="${post.pidx}" />
 					<input type="hidden" name="idx" id="idx" th:value="${#authentication.principal.idx}" />
@@ -28,6 +28,34 @@
 			</div>
 			<div class="content">
 				<pre th:utext="${post.content}"></pre>
+			</div>
+			<div th:if="${vote != null and not #lists.isEmpty(vote)}" class="vote">
+				<table>
+					<thead>
+						<tr>
+							<td colspan="2">
+								<span>(투표)</span>
+								<span th:text="${vote.question}"></span>
+								<input type="hidden" name="vidx" id="vidx" th:value="${vote.vidx}" />
+								<input type="hidden" id="vote-check" th:value="${voteCheck}" />
+							</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="voteSub:${voteSub}">
+							<td>
+								<button class="vote-sub" th:classappend="${votedSub == voteSub.vsidx ? 'selected' : ''}">
+									<span th:text="${voteSub.answer}"></span>
+									<input type="hidden" class="vsidx" th:value="${voteSub.vsidx}" />
+								</button>
+							</td>
+							<td class="vote-sub-wrap">
+								<span class="number-of-votes" th:text="${voteSub.numberOfVotes}"></span>
+								<span class="number-of-votes">표</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			<div class="reply">
 				<div class="reply-p">
@@ -123,11 +151,47 @@
     </div>
 	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <script>
+
+    	// 투표 기능 관련
+    	let pidx = $("#pidx").val();
+		let idx = $("#idx").val();
+		let vidx = $("#vidx").val();
+		let voteCheck = $("#vote-check").val();
+
+		// 이전에 투표를 했는지 확인하고 투표버튼 색 변경
+<!--		if(voteCheck > 0) {-->
+<!--			-->
+<!--		}-->
+
+    	$(document).on('click', '.vote-sub', function() {
+    		let vsidx = $(this).find(".vsidx").val();
+    		if(voteCheck == 0) {
+    			// 이전에 하지 않은 투표인 경우
+				$.ajax({
+					url: '/vote',
+					type: 'post',
+					contentType: 'application/json',
+					data: JSON.stringify({
+						vidx: vidx,
+						vsidx: vsidx,
+						idx: idx,
+						voteCheck: voteCheck
+					}),
+					success: function(data) {
+						$(this).find(".vote-sub").css("color", "#B9E0FD");
+						voteCheck = 1;
+						alert("투표가 완료되었습니다");
+					}
+				})
+    		} else {
+    			alert("이미 투표를 완료하였습니다");
+    		}
+		});
+
     	// 추천 기능 관련
-		const pidx = $("#pidx").val();
-		const idx = $("#idx").val();
 		let heartCheck = $("#heart-check").val();
 
+		// 이전에 추천을 눌렀는지 확인하고 하트 색 변경
 		if(heartCheck > 0) {
 			$("#checked").css("color", "pink");
 		} else {
